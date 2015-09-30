@@ -3,8 +3,9 @@
 namespace Phalcon\Evolve\Test\Http;
 
 use Phalcon\Evolve\Http\ClientPlatform;
+use Phalcon\Evolve\Test\UnitTestCase;
 
-class ClientPlatformTest extends \UnitTestCase {
+class ClientPlatformTest extends UnitTestCase {
 	
 	/**
 	 * UA 情報は 2014年 無作為に選定
