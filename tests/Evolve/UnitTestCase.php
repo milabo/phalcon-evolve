@@ -31,6 +31,14 @@ class UnitTestCase extends PhalconTestCase {
 		$di = new FactoryDefault();
 		DI::reset();
 
+		$config = new Config([
+			'redis' => [
+				'db_session' => '0'
+			]
+		]);
+
+		$di->set('config', $config);
+
 		$di->set('logger', function() {
 			return new NullLogger();
 		}, true);
