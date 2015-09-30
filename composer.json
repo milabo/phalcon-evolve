@@ -21,6 +21,7 @@
     "php": ">=5.4",
     "ginq/ginq": "0.2.*",
     "sukobuto/dmimage": "dev-master",
+    "phalcon/incubator": "1.3.4",
     "pear-pear.php.net/PEAR": "*@stable",
     "pear-pear.php.net/Net_SMTP": "*@stable",
     "pear-pear.php.net/Auth_SASL": "*@stable",
