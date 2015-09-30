@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$/src/Evolve/Cache/NullBackend.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Evolve/CustomGinq.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Evolve/Http" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Evolve/Imaging" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Evolve/Logger" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Evolve/Mail" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Evolve/Model/CsvDataAdapter.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Evolve/Model/GzCompressBehavior.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Evolve/Model/ModelBase.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Evolve/Model/SerializeBehavior.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Evolve/PrimitiveExtension/ArrayExtension.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Evolve/PrimitiveExtension/StringExtension.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Evolve/PrimitiveExtension/StringWriteAdapterInterface.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Evolve/Security" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Evolve/System/Clock.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Evolve/System/ClockForTest.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Evolve/System/DateTimeConvertible.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Evolve/System/Debug.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Evolve/System/FileLocker.php" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>
