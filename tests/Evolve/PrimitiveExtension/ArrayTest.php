@@ -12,9 +12,8 @@ class ArrayTest extends UnitTestCase {
 	public function testArrayAccess()
 	{
 		$arr = Ax::x([]);
-		$this->assertEmpty($arr);
+		$this->assertCount(0, $arr);
 		$arr[] = "hello";
-		$this->assertNotEmpty($arr);
 		$arr[] = "world";
 		$arr[0] = "new";
 		$this->assertCount(2, $arr);
