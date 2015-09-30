@@ -61,7 +61,7 @@ class UnitTestCase extends PhalconTestCase {
 		/**
 		 * Start the session the first time some component request the session service
 		 */
-		$di->set('session', function() use ($config) {
+		$di->set('session', function() {
 			$session = new Mock\PseudoSessionAdapter();
 			$session->start();
 			return $session;
@@ -76,9 +76,9 @@ class UnitTestCase extends PhalconTestCase {
 		/**
 		 * Redis connection is created based in the parameters defined in the configuration file
 		 */
-		$di->set('redis', function() use($config) {
+		$di->set('redis', function() {
 			$redis = new \Redis();
-			$redis->connect($config->redis->host, $config->redis->port);
+			$redis->connect('localhost');
 			$redis->setOption(\Redis::OPT_PREFIX, 'test:');
 			return $redis;
 		});
