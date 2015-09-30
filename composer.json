@@ -5,10 +5,12 @@
   "keywords": [],
   "homepage": "http://mi-labo.co.jp/",
   "licence": "milabo confidencial",
-  "authors": {
-    "name": "Milabo Co.,Ltd.",
-    "email": "info@mi-labo.co.jp"
-  },
+  "authors": [
+    {
+      "name": "Milabo Co.,Ltd.",
+      "email": "info@mi-labo.co.jp"
+    }
+  ],
   "repositories": [
     {
       "type": "pear",
