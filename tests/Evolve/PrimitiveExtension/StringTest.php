@@ -3,9 +3,10 @@
 namespace Phalcon\Evolve\Test\PrimitiveExtension;
 
 use Phalcon\Evolve\PrimitiveExtension\StringExtension as Sx;
+use Phalcon\Evolve\Test\UnitTestCase;
 
 
-class StringTest extends \UnitTestCase {
+class StringTest extends UnitTestCase {
 
 	public function test()
 	{

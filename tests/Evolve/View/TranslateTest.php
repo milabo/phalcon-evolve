@@ -2,11 +2,12 @@
 
 namespace Phalcon\Evolve\Test\View;
 
+use Phalcon\Evolve\Test\UnitTestCase;
 use Phalcon\Evolve\View\Translate;
 use Phalcon\Config;
 use Phalcon\DiInterface;
 
-class TranslateTest extends \UnitTestCase {
+class TranslateTest extends UnitTestCase {
 	
 	/** @var string translations directory for test */
 	private $t_dir;

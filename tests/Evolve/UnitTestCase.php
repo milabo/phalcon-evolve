@@ -1,6 +1,12 @@
 <?php
 
+namespace Phalcon\Evolve\Test;
+
 use Phalcon\DI,
+	Phalcon\DiInterface,
+	Phalcon\Config,
+	Phalcon\Crypt,
+	Phalcon\Assets\Manager as AssetManager,
 	Phalcon\Test\UnitTestCase as PhalconTestCase;
 use Phalcon\Evolve\Http\ClientPlatform;
 use Phalcon\Evolve\Logger\NullLogger;
@@ -18,7 +24,7 @@ class UnitTestCase extends PhalconTestCase {
 	
 	protected $temp_dir;
 	
-	public function setUp(Phalcon\DiInterface $di = null, Phalcon\Config $config = null)
+	public function setUp(DiInterface $di = null, Config $config = null)
 	{
 		$this->temp_dir = __DIR__ . '/temp';
 #region $di にサービスを設定
@@ -37,7 +43,7 @@ class UnitTestCase extends PhalconTestCase {
 		 * The Asset Manager component
 		 */
 		$di->set('assets', function () {
-			return new Phalcon\Assets\Manager();
+			return new AssetManager();
 		}, true);
 
 		/**
@@ -62,7 +68,7 @@ class UnitTestCase extends PhalconTestCase {
 		}, true);
 
 		$di->set('crypt', function() {
-			$crypt = new Phalcon\Crypt();
+			$crypt = new Crypt();
 			$crypt->setKey('asdfetyuife86kaejiue486a8jdscas');
 			return $crypt;
 		}, true);
@@ -71,9 +77,9 @@ class UnitTestCase extends PhalconTestCase {
 		 * Redis connection is created based in the parameters defined in the configuration file
 		 */
 		$di->set('redis', function() use($config) {
-			$redis = new Redis();
+			$redis = new \Redis();
 			$redis->connect($config->redis->host, $config->redis->port);
-			$redis->setOption(Redis::OPT_PREFIX, 'test:');
+			$redis->setOption(\Redis::OPT_PREFIX, 'test:');
 			return $redis;
 		});
 
@@ -81,7 +87,7 @@ class UnitTestCase extends PhalconTestCase {
 		 * Register the flash service with the Twitter Bootstrap classes
 		 */
 		$di->set('flash', function() {
-			return new Phalcon\Flash\Direct(array(
+			return new \Phalcon\Flash\Direct(array(
 				'error' => 'alert alert-error',
 				'success' => 'alert alert-success',
 				'notice' => 'alert alert-info',

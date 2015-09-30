@@ -1,11 +1,6 @@
 <?php
-/**
- * Author: sukobuto.com
- * Since: 14/06/16 2:11
- * Copyright: 2014 sukobuto.com All Rights Reserved.
- */
 
-namespace Mock;
+namespace Phalcon\Evolve\Test\Mock;
 
 use Phalcon\Session\AdapterInterface;
 

@@ -4,9 +4,10 @@ namespace Phalcon\Evolve\Test\PrimitiveExtension;
 
 use Phalcon\Evolve\PrimitiveExtension\ArrayExtension as Ax;
 use Phalcon\Evolve\PrimitiveExtension\StringExtension as Sx;
+use Phalcon\Evolve\Test\UnitTestCase;
 
 
-class ArrayTest extends \UnitTestCase {
+class ArrayTest extends UnitTestCase {
 
 	public function testArrayAccess()
 	{

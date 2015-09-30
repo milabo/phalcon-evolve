@@ -6,9 +6,10 @@ use Phalcon\Evolve\Security\Auth;
 use Phalcon\Evolve\Security\UserInterface;
 use Phalcon\DI;
 use Phalcon\Config;
+use Phalcon\Evolve\Test\UnitTestCase;
 use Phalcon\Session\Adapter as Session;
 
-class AuthTest extends \UnitTestCase {
+class AuthTest extends UnitTestCase {
 	
 	public function testAuthenticate()
 	{

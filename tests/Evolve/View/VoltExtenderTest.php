@@ -3,9 +3,10 @@
 namespace Phalcon\Evolve\Test\View;
 
 
+use Phalcon\Evolve\Test\UnitTestCase;
 use Phalcon\Evolve\View\VoltExtender;
 
-class VoltExtenderTest extends \UnitTestCase {
+class VoltExtenderTest extends UnitTestCase {
 	
 	public function testFilter()
 	{
