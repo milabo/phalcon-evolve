@@ -17,7 +17,6 @@
   ],
   "require": {
     "php": ">=5.4",
-    "sukobuto/dmimage": "dev-master",
     "ginq/ginq": "0.2.*",
     "pear-pear.php.net/PEAR": "*@stable",
     "pear-pear.php.net/Net_SMTP": "*@stable",
