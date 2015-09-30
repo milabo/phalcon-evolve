@@ -26,7 +26,7 @@ class UnitTestCase extends PhalconTestCase {
 	
 	public function setUp(DiInterface $di = null, Config $config = null)
 	{
-		$this->temp_dir = __DIR__ . '/temp';
+		$this->temp_dir = __DIR__ . '/../temp';
 #region $di にサービスを設定
 		$di = new FactoryDefault();
 		DI::reset();
