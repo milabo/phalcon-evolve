@@ -1,6 +1,6 @@
 <?php
 
-namespace Test\Components\Http;
+namespace Phalcon\Evolve\Test\Http;
 
 use Phalcon\Evolve\Http\ClientPlatform;
 

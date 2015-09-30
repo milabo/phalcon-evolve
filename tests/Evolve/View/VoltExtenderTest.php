@@ -1,6 +1,6 @@
 <?php
 
-namespace Test\Components\View;
+namespace Phalcon\Evolve\Test\View;
 
 
 use Phalcon\Evolve\View\VoltExtender;

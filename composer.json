@@ -18,6 +18,7 @@
   "require": {
     "php": ">=5.4",
     "ginq/ginq": "0.2.*",
+    "sukobuto/dmimage": "dev-master",
     "pear-pear.php.net/PEAR": "*@stable",
     "pear-pear.php.net/Net_SMTP": "*@stable",
     "pear-pear.php.net/Auth_SASL": "*@stable",
@@ -28,9 +29,9 @@
     "phpunit/phpunit": "4.6.*"
   },
   "autoload": {
-    "psr-4": { "Phalcon\\Evolve": "src/Evolve" }
+    "psr-4": { "Phalcon\\Evolve\\": "src/Evolve" }
   },
   "autoload-dev": {
-    "psr-4": { "Phalcon\\Evolve\\Test": "tests/Evolve" }
+    "psr-4": { "Phalcon\\Evolve\\Test\\": "tests/Evolve" }
   }
 }

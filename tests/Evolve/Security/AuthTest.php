@@ -1,6 +1,6 @@
 <?php
 
-namespace Test\Components\Security;
+namespace Phalcon\Evolve\Test\Security;
 
 use Phalcon\Evolve\Security\Auth;
 use Phalcon\Evolve\Security\UserInterface;
