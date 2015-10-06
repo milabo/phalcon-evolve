@@ -3,10 +3,8 @@
 namespace Phalcon\Evolve\Model;
 use Phalcon\Evolve\Security\Filter\SeparatedNumber;
 use Phalcon\Evolve\System\DateTimeConvertible;
-use App\Models\ModelBase;
 use Phalcon\Evolve\PrimitiveExtension\ArrayExtension as Ax;
 use Phalcon\Evolve\PrimitiveExtension\StringExtension as Sx;
-use Phalcon\Evolve\PrimitiveExtension\StringWriteAdapterInterface;
 use Phalcon\Evolve\CustomGinq as Ginq;
 use Phalcon\Db\Result\Pdo;
 use Phalcon\Db\ResultInterface;

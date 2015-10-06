@@ -32,7 +32,7 @@ class GzCompressBehavior extends Behavior implements BehaviorInterface {
 
 	/**
 	 * @param string $type
-	 * @param \App\Models\ModelBase $model
+	 * @param \Phalcon\Evolve\Model\ModelBase $model
 	 */
 	public function notify($type, $model)
 	{
@@ -61,7 +61,7 @@ class GzCompressBehavior extends Behavior implements BehaviorInterface {
 	}
 
 	/**
-	 * @param \App\Models\ModelBase $model
+	 * @param \Phalcon\Evolve\Model\ModelBase $model
 	 * @param string $field
 	 * @return mixed
 	 * @throws \ErrorException
@@ -79,7 +79,7 @@ class GzCompressBehavior extends Behavior implements BehaviorInterface {
 	}
 
 	/**
-	 * @param \App\Models\ModelBase $model
+	 * @param \Phalcon\Evolve\Model\ModelBase $model
 	 * @param string $field
 	 * @param mixed $value
 	 * @throws \ErrorException
