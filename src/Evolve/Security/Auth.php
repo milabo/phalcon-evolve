@@ -210,7 +210,7 @@ class Auth extends Injectable {
 	{
 		if (isset($this->session_surrogate_id)) return $this->session_surrogate_id;
 		$session_id = $this->session->getId();
-		$this->session_surrogate_id = hash('sha256', $session_id . $_SERVER['REMOTE_ADDR']);
+		$this->session_surrogate_id = hash('sha256', $session_id . $_SERVER['HTTP_USER_AGENT']);
 		$this->getRedis(true)->setex("session-surrogate:{$this->session_surrogate_id}", 3600, $session_id);
 		return $this->session_surrogate_id;
 	}
