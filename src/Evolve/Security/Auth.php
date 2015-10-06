@@ -3,6 +3,7 @@
 namespace Phalcon\Evolve\Security;
 
 use Phalcon\DI\Injectable;
+use Phalcon\DiInterface;
 
 /**
  * 認証クラス
@@ -224,5 +225,24 @@ class Auth extends Injectable {
 		$redis = $this->getRedis(true);
 		$redis->del("session-surrogate:{$this->session_surrogate_id}");
 		$this->session_surrogate_id = null;
+	}
+
+	/**
+	 * ドメイン間でセッションの橋渡しをするための代理IDからセッションIDを取得する
+	 * @param DiInterface $di
+	 * @return string|null
+	 */
+	public static function getSessionIdFromSurrogateId(DiInterface $di)
+	{
+		if (isset($_GET['_surrogate'])) {
+			$session_surrogate_id = $_GET['_surrogate'];
+			/** @var \Redis $redis */
+			$redis = $di->getShared('redis');
+			$session_id = $redis->get("session-surrogate:$session_surrogate_id");
+			if ($session_id && $session_surrogate_id === hash('sha256', $session_id . $_SERVER['HTTP_USER_AGENT'])) {
+				return $session_id;
+			}
+		}
+		return null;
 	}
 }
