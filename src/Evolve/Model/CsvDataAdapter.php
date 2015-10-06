@@ -6,7 +6,7 @@
  * Time: 13:18
  */
 
-namespace Phalcon\Evolve\Orm;
+namespace Phalcon\Evolve\Model;
 use Phalcon\Evolve\Security\Filter\SeparatedNumber;
 use Phalcon\Evolve\System\DateTimeConvertible;
 use App\Models\ModelBase;
@@ -19,7 +19,7 @@ use Phalcon\Db\ResultInterface;
 
 /**
  * Class CsvDataAdapter
- * @package Mock
+ * @package Phalcon\Evolve\Model
  */
 class CsvDataAdapter {
 	use DateTimeConvertible;

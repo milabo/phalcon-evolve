@@ -5,7 +5,7 @@
  * Copyright: 2014 sukobuto.com All Rights Reserved.
  */
 
-namespace Phalcon\Evolve\Orm;
+namespace Phalcon\Evolve\Model;
 
 use Phalcon\Mvc\Model\Behavior,
 	Phalcon\Mvc\Model\BehaviorInterface,

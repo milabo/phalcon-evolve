@@ -7,7 +7,7 @@
  * phalcon model <table-name> --namespace=App\\Models --get-set --extends=ModelBase --excludefields=id,created_ts,updated_ts --doc
  */
 
-namespace App\Models;
+namespace Phalcon\Evolve\Model;
 
 use Phalcon\Evolve\System\DateTimeConvertible;
 use Phalcon\Evolve\CustomGinq as Ginq;
