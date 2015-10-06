@@ -1,11 +1,4 @@
 <?php
-/**
- * Author: Kenta Suzuki
- * Since: 13/12/24 23:47
- *
- * phalcon generate commnand
- * phalcon model <table-name> --namespace=App\\Models --get-set --extends=ModelBase --excludefields=id,created_ts,updated_ts --doc
- */
 
 namespace Phalcon\Evolve\Model;
 

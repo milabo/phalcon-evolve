@@ -1,9 +1,4 @@
 <?php
-/**
- * Author: Kenta Suzuki
- * Since: 2014/11/30 22:32
- * Copyright: 2014 sukobuto.com All Rights Reserved.
- */
 
 namespace Phalcon\Evolve\Model;
 

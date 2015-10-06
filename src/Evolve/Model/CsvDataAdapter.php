@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Kenta
- * Date: 2015/08/05
- * Time: 13:18
- */
 
 namespace Phalcon\Evolve\Model;
 use Phalcon\Evolve\Security\Filter\SeparatedNumber;
