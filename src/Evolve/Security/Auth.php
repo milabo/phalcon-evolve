@@ -4,6 +4,7 @@ namespace Phalcon\Evolve\Security;
 
 use Phalcon\DI\Injectable;
 use Phalcon\DiInterface;
+use Phalcon\Evolve\PrimitiveExtension\ArrayExtension as Ax;
 
 /**
  * 認証クラス
@@ -211,7 +212,7 @@ class Auth extends Injectable {
 	{
 		if (isset($this->session_surrogate_id)) return $this->session_surrogate_id;
 		$session_id = $this->session->getId();
-		$this->session_surrogate_id = hash('sha256', $session_id . $_SERVER['HTTP_USER_AGENT']);
+		$this->session_surrogate_id = hash('sha256', $session_id . Ax::x($_SERVER)->getOrElse('HTTP_USER_AGENT', "NO-UA"));
 		$this->getRedis(true)->setex("session-surrogate:{$this->session_surrogate_id}", 3600, $session_id);
 		return $this->session_surrogate_id;
 	}
@@ -239,7 +240,7 @@ class Auth extends Injectable {
 			/** @var \Redis $redis */
 			$redis = $di->getShared('redis');
 			$session_id = $redis->get("session-surrogate:$session_surrogate_id");
-			if ($session_id && $session_surrogate_id === hash('sha256', $session_id . $_SERVER['HTTP_USER_AGENT'])) {
+			if ($session_id && $session_surrogate_id === hash('sha256', $session_id . Ax::x($_SERVER)->getOrElse('HTTP_USER_AGENT', "NO-UA"))) {
 				return $session_id;
 			}
 		}
