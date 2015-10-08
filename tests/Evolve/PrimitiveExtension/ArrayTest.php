@@ -98,4 +98,12 @@ class ArrayTest extends UnitTestCase {
 		$this->assertEquals([], $arr->keyFilter([])->unwrap());
 		$this->assertEquals([ 'second' => 2, 'third' => 3 ], $arr->keyFilter(['second', 'third'])->unwrap());
 	}
+
+	public function testSort()
+	{
+		$arr = Ax::x(['fog', 'stake', 'lump', 'fuel', 'bill']);
+
+		$this->assertEquals(['bill', 'fog', 'fuel', 'lump', 'stake'], $arr->sort()->unwrap());
+		$this->assertEquals(['bill', 'fuel', 'lump', 'stake', 'fog'], $arr->reverse()->unwrap());
+	}
 } 

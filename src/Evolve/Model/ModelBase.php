@@ -549,6 +549,31 @@ class ModelBase extends Model {
 	}
 
 	/**
+	 * JSON 変換用の配列を取得する
+	 * @return array
+	 * @throws \Exception
+	 */
+	public function pullArray()
+	{
+		$metaData = $this->getModelsMetaData();
+		$attributes = $metaData->getAttributes($this);
+		$columnMap = $metaData->getColumnMap($this);
+		$data = [];
+		foreach ($attributes as $attribute) {
+			$field = $attribute;
+			if (is_array($columnMap) and isset($columnMap[$attribute])) {
+				$field = $columnMap[$attribute];
+			}
+			$value = $this->_getValue($field);
+			if (is_object($value)) {
+				$value = $this->$field;
+			}
+			$data[$field] = $value;
+		}
+		return $data;
+	}
+
+	/**
 	 * @param string $message
 	 * @param string $method
 	 * @param int $line

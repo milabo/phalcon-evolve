@@ -567,6 +567,11 @@ class ArrayExtension implements \Countable, \Iterator, \ArrayAccess {
 		ksort($this->array, $sort_flags);
 		return $this;
 	}
+
+	public function reverse()
+	{
+		return self::x(array_reverse($this->array));
+	}
 	
 	#endregion
 	
