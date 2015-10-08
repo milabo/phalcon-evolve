@@ -553,19 +553,22 @@ class ArrayExtension implements \Countable, \Iterator, \ArrayAccess {
 	#region sort
 	
 	public function sort($sort_flags = null) {
-		sort($this->array, $sort_flags);
-		return $this;
+		$arr = $this->array;
+		sort($arr, $sort_flags);
+		return self::x($arr);
 	}
 
 	public function usort($compare_func){
-		usort($this->array, $compare_func);
-		return $this;
+		$arr = $this->array;
+		usort($arr, $compare_func);
+		return self::x($arr);
 	}
 
 	public function ksort($sort_flags = null)
 	{
-		ksort($this->array, $sort_flags);
-		return $this;
+		$arr = $this->array;
+		ksort($arr, $sort_flags);
+		return self::x($arr);
 	}
 
 	public function reverse()
