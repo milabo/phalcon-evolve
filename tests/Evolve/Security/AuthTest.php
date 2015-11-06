@@ -50,6 +50,11 @@ class UserMock implements UserInterface {
 	{
 		return PHP_INT_MAX - 1;
 	}
+
+	public function getLogin()
+	{
+		return "userxxx";
+	}
 	
 	public function serialize()
 	{

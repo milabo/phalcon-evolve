@@ -11,6 +11,11 @@ interface UserInterface {
 	public function getId();
 
 	/**
+	 * @return string
+	 */
+	public function getLogin();
+
+	/**
 	 * セッションインデクサIDを取得
 	 * Redis でリアルタイムセッションへのインデックスを管理するために使用する。
 	 *
