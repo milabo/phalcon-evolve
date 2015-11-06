@@ -89,12 +89,19 @@ class Auth extends Injectable {
 	}
 
 	/**
-	 * @param string $role
+	 * @param string|array $role
 	 * @return bool
 	 */
 	public function isAuthenticatedAs($role)
 	{
-		return isset($this->user) and $this->user->getRole() === $role;
+		if (!isset($this->user)) return false;
+		if (!is_array($role)) {
+			$role = [$role];
+		}
+		foreach ($role as $r) {
+			if ($this->user->getRole() === $r) return true;
+		}
+		return false;
 	}
 
 	/**
