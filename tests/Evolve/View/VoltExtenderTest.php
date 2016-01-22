@@ -39,6 +39,22 @@ class VoltExtenderTest extends UnitTestCase {
 			VoltExtender::nlbr("This is\r\n a test\r string."),
 			'改行文字を改行エレメントに変換。'
 		);
+		$this->assertEquals(
+			"2016年01月01日",
+			VoltExtender::dateFormat('2016-01-01', 'Y年m月d日')
+		);
+		$this->assertEquals(
+			"2016年01月01日",
+			VoltExtender::dateFormat(strtotime('2016-01-01'), 'Y年m月d日')
+		);
+		$this->assertEquals(
+			"水",
+			VoltExtender::map(3, ['日', '月', '火', '水', '木', '金', '土'])
+		);
+		$this->assertEquals(
+			"日",
+			VoltExtender::map("0", ['日', '月', '火', '水', '木', '金', '土'])
+		);
 	}
 	
 	public function testFunction()

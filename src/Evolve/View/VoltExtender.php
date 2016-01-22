@@ -117,6 +117,34 @@ class VoltExtender {
 	}
 
 	/**
+	 * @param string|integer $resolved
+	 * @param string $format
+	 * @return string
+	 */
+	public static function dateFormat($resolved, $format)
+	{
+		if (is_numeric($resolved)) {
+			$resolved = intval($resolved);
+		} else {
+			$resolved = strtotime($resolved);
+		}
+		return date($format, $resolved);
+	}
+
+	/**
+	 * @param string|integer $resolved
+	 * @param array $map
+	 * @return
+	 */
+	public static function map($resolved, $map)
+	{
+		if (isset($map[$resolved])) {
+			return $map[$resolved];
+		}
+		return $resolved;
+	}
+
+	/**
 	 * 現在のクエリストリングを返却します
 	 * 引数 $alternate に変更・追加したいパラメータを指定できます
 	 *
@@ -268,6 +296,8 @@ class VoltExtender {
 			->addFilter('url2link', "$ve::url2link")
 			->addFilter('mdlink', "$ve::mdLink")
 			->addFilter('empty_to', "$ve::emptyTo")
+			->addFilter('date_format', "$ve::dateFormat")
+			->addFilter('map', "$ve::map")
 			->addFunction('render', "$ve::render")
 			->addFunction('query_string', "$ve::queryString")
 			->addFunction('get_or_default', "$ve::getOrDefault")
