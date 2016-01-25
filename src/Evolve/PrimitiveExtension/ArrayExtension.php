@@ -2,6 +2,7 @@
 
 namespace Phalcon\Evolve\PrimitiveExtension;
 
+use Ginq\Ginq;
 use Phalcon\Evolve\CustomGinq;
 
 class ArrayExtension implements \Countable, \Iterator, \ArrayAccess {
@@ -160,9 +161,10 @@ class ArrayExtension implements \Countable, \Iterator, \ArrayAccess {
 					$str .= "\n";
 					$str .= self::x($value->toArray())->toString($indent . "  ");
 				}
-			} else if (is_array($value) or $value instanceof self) {
-				$str .= count($value) . " items\n";
-				$str .= self::x($value)->toString($indent . "  ");
+			} else if (is_array($value) or $value instanceof self or $value instanceof Ginq) {
+				$value = self::x($value);
+				$str .= $value->length() . " items\n";
+				$str .= $value->toString($indent . "  ");
 			} else if (is_integer($value)) {
 				$str .= "{$value}\n";
 			} else if (is_bool($value)){
