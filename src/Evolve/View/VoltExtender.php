@@ -133,11 +133,14 @@ class VoltExtender {
 
 	/**
 	 * @param string|integer $resolved
-	 * @param array $map
-	 * @return
+	 * @param array|string $map 変換対象の配列 もしくはスペース区切り文字列
+	 * @return mixed
 	 */
 	public static function map($resolved, $map)
 	{
+		if (is_string($map)) {
+			$map = explode(' ', $map);
+		}
 		if (isset($map[$resolved])) {
 			return $map[$resolved];
 		}
