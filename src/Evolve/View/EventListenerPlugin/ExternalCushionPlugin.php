@@ -17,6 +17,7 @@ class ExternalCushionPlugin implements IEventListenerPlugin {
 	/**
 	 * @param string $local_domain
 	 * @param string $cushion_url
+	 * @param boolean $bypass
 	 */
 	public function __construct($local_domain, $cushion_url = null, $bypass = false) {
 		$this->local_domain = $local_domain;
