@@ -98,6 +98,29 @@ class TranslatedValidation extends Validation {
 	#region short hand and utility
 
 	/**
+	 * ラジオボタンの検証を設定するショートハンド
+	 * @param string $attribute
+	 * @param string $label
+	 * @param array $options
+	 * @param bool $required
+	 * @return self $this
+	 */
+	public function chooseOne($attribute, $label, $options, $required = false)
+	{
+		if ($required) {
+			$this->add($attribute, new PresenceOf([
+				'cancelOnFail' => true,
+			]));
+		}
+		$this->add($attribute, new InclusionIn([
+			'message' => $this->translate->query('err.choose_one'),
+			'domain' => $options,
+		]));
+		$this->setLabel($attribute, $label);
+		return $this;
+	}
+
+	/**
 	 * テキストフィールドの検証を設定するショートハンド
 	 * @param string $attribute
 	 * @param string $label
