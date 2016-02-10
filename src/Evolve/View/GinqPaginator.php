@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Components\Presentation;
+namespace Phalcon\Evolve\View;
 
 use Phalcon\Evolve\CustomGinq;
 use Phalcon\Http\Client\Exception;
