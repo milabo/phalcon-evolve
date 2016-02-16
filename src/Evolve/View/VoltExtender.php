@@ -93,7 +93,7 @@ class VoltExtender {
 	public static function mdLink($resolved)
 	{
 		// 電話番号, メールアドレスリンク
-		$pattern = '/\[(tel|mailto):(.+)\]/';
+		$pattern = '/\[(tel|mailto):([^\]]+)\]/';
 		$resolved = preg_replace_callback($pattern, function($matches) {
 			$scheme = $matches[1];
 			$value = $matches[2];

@@ -3,7 +3,7 @@
 namespace Phalcon\Evolve\View;
 
 use Phalcon\Evolve\CustomGinq;
-use Phalcon\Http\Client\Exception;
+use Phalcon\Paginator\Exception;
 use Phalcon\Paginator\AdapterInterface;
 
 class GinqPaginator implements AdapterInterface
