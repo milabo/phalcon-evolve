@@ -143,7 +143,6 @@ trait DateTimeConvertible {
 		if ($birthday->format('m-d') == '02-29') {
 			$birthday = new \DateTime($birthday->format('Y') . "-02-28");
 		}
-		var_dump($format);
 		return self::anyToDatetime($birthday, $format, $nullValue);
 	}
 
