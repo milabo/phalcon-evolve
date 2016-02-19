@@ -44,7 +44,10 @@ trait DateTimeConvertible {
 			if ($format) return $nullValue;
 			else return null;
 		}
-		if ($source instanceof \DateTime) return $source;
+		if ($source instanceof \DateTime) {
+			if ($format) return $source->format($format);
+			return $source;
+		};
 		if (is_integer($source)) {
 			$source = date('Y-m-d H:i:s', $source);
 		}
@@ -115,7 +118,7 @@ trait DateTimeConvertible {
 	 * @param $date_to
 	 * @return \Generator
 	 */
-	protected function yearMonthRange($date_from, $date_to)
+	protected static function yearMonthRange($date_from, $date_to)
 	{
 		$date_from = self::formatDateForSave($date_from);
 		$date_to = self::formatDateForSave($date_to);
@@ -123,6 +126,25 @@ trait DateTimeConvertible {
 		for ($ts = strtotime(Sx::x($date_from)->slice(0, 7)); $ts <= strtotime($date_to); $ts = strtotime('+1 month', $ts)) {
 			yield date('Y-m', $ts);
 		}
+	}
+
+	/**
+	 * みなし生年月日に変換
+	 * うるう年の 2/29 は 2/28 とする
+	 * @param \DateTime|string|integer $birthday
+	 * @param string $format
+	 * @param string $nullValue
+	 * @return \DateTime|null|string
+	 */
+	protected static function toDeemedBirthday($birthday, $format = null, $nullValue = '-')
+	{
+		if (is_null($birthday)) return $format ? $nullValue : null;
+		$birthday = self::anyToDatetime($birthday);
+		if ($birthday->format('m-d') == '02-29') {
+			$birthday = new \DateTime($birthday->format('Y') . "-02-28");
+		}
+		var_dump($format);
+		return self::anyToDatetime($birthday, $format, $nullValue);
 	}
 
 } 
