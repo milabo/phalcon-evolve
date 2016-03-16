@@ -148,6 +148,16 @@ class VoltExtender {
 	}
 
 	/**
+	 * @param array $resolved
+	 * @param array $array
+	 * @return array
+	 */
+	public static function merge($resolved, $array)
+	{
+		return array_merge($resolved, $array);
+	}
+
+	/**
 	 * 現在のクエリストリングを返却します
 	 * 引数 $alternate に変更・追加したいパラメータを指定できます
 	 *
@@ -301,6 +311,7 @@ class VoltExtender {
 			->addFilter('empty_to', "$ve::emptyTo")
 			->addFilter('date_format', "$ve::dateFormat")
 			->addFilter('map', "$ve::map")
+			->addFilter('merge', "$ve::merge")
 			->addFunction('render', "$ve::render")
 			->addFunction('query_string', "$ve::queryString")
 			->addFunction('get_or_default', "$ve::getOrDefault")
@@ -317,6 +328,8 @@ class VoltExtender {
 			->addFunction('from', "$ve::from")
 			->addFunction('ax', "$ve::ax")
 			->addFunction('form_token', "$ve::formToken")
+			->addFunction('compact', 'compact')
+			->addFunction('extract', 'extract')
 		;
 	}
 
