@@ -11,6 +11,9 @@
       "email": "info@mi-labo.co.jp"
     }
   ],
+  "config": {
+    "secure-http": false
+  },
   "repositories": [
     {
       "type": "pear",
