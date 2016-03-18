@@ -243,11 +243,12 @@ class TranslatedValidation extends Validation {
 	 * @param null $minValue
 	 * @param null $maxValue
 	 * @param bool $required
+	 * @param string $filter
 	 * @return self $this
 	 */
-	public function numberField($attribute, $label, $minValue = null, $maxValue = null, $required = false)
+	public function numberField($attribute, $label, $minValue = null, $maxValue = null, $required = false, $filter = 'int')
 	{
-		$this->setFilters($attribute, ['int']);
+		$this->setFilters($attribute, [$filter]);
 		if ($required) {
 			$this->add($attribute, new PresenceOf());
 		}
