@@ -158,6 +158,17 @@ class VoltExtender {
 	}
 
 	/**
+	 * @param string $resolved
+	 * @param string|array $from
+	 * @param string|array $to
+	 * @return string
+	 */
+	public static function replace($resolved, $from, $to)
+	{
+		return str_replace($from, $to, $resolved);
+	}
+
+	/**
 	 * 現在のクエリストリングを返却します
 	 * 引数 $alternate に変更・追加したいパラメータを指定できます
 	 *
@@ -312,6 +323,7 @@ class VoltExtender {
 			->addFilter('date_format', "$ve::dateFormat")
 			->addFilter('map', "$ve::map")
 			->addFilter('merge', "$ve::merge")
+			->addFilter('replace', "$ve::replace")
 			->addFunction('render', "$ve::render")
 			->addFunction('query_string', "$ve::queryString")
 			->addFunction('get_or_default', "$ve::getOrDefault")
