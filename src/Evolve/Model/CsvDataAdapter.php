@@ -167,7 +167,7 @@ class CsvDataAdapter {
 		if (is_string($filter)) {
 			switch ($filter) {
 				case self::FILTER_TAXONOMY:
-					return Sx::x($value)->split(' ', true);
+					return Sx::x($value)->replace('　', ' ')->split(' ', true);
 				case self::FILTER_BOOL:
 					return trim($value) === '1';
 				case self::FILTER_SEPARATED_NUMBER:
