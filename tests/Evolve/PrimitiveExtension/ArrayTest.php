@@ -106,4 +106,28 @@ class ArrayTest extends UnitTestCase {
 		$this->assertEquals(['bill', 'fog', 'fuel', 'lump', 'stake'], $arr->sort()->unwrap());
 		$this->assertEquals(['bill', 'fuel', 'lump', 'stake', 'fog'], $arr->reverse()->unwrap());
 	}
+
+	public function testToHash()
+	{
+		$arr = Ax::x(['fog', 'stake', 'lump', 'fuel', 'bill']);
+
+		$this->assertEquals([
+			'key-fog' => 'fog',
+			'key-stake' => 'stake',
+			'key-lump' => 'lump',
+			'key-fuel' => 'fuel',
+			'key-bill' => 'bill',
+		], $arr->toHash(function($item) { return "key-" . $item; })->unwrap());
+
+		$this->assertEquals([
+			'key-fog' => 'elm-fog',
+			'key-stake' => 'elm-stake',
+			'key-lump' => 'elm-lump',
+			'key-fuel' => 'elm-fuel',
+			'key-bill' => 'elm-bill',
+		], $arr->toHash(
+			function($item) { return "key-" . $item; },
+			function($item) { return "elm-" . $item; }
+		)->unwrap());
+	}
 } 

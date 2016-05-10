@@ -413,6 +413,20 @@ class ArrayExtension implements \Countable, \Iterator, \ArrayAccess {
 	{
 		return StringExtension::x($this->join($glue));
 	}
+
+	/**
+	 * @param callable $element_selector
+	 * @param callable $key_selector
+	 * @return ArrayExtension
+	 */
+	public function toHash($key_selector, $element_selector = null)
+	{
+		$new = self::zero();
+		foreach ($this as $item) {
+			$new[$key_selector($item)] = $element_selector ? $element_selector($item) : $item;
+		}
+		return $new;
+	}
 	
 	#endregion
 	
