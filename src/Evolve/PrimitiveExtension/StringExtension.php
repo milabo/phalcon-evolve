@@ -22,6 +22,31 @@ class StringExtension {
 	}
 
 	/**
+	 * 桁数を指定してランダム文字列を生成する
+	 * @param integer $length
+	 * @return string
+	 */
+	public static function random($length)
+	{
+		$str = array_merge(range('a', 'z'), range('0', '9'), range('A', 'Z'));
+		$r_str = null;
+		for ($i = 0; $i < $length; $i++) {
+			$r_str .= $str[rand(0, count($str) - 1)];
+		}
+		return $r_str;
+	}
+
+	/**
+	 * 桁数を指定してランダム文字列を生成する
+	 * @param integer $length
+	 * @return StringExtension
+	 */
+	public static function random_x($length)
+	{
+		return new self(self::random($length));
+	}
+
+	/**
 	 * 文字列を拡張するコンバータを取得する
 	 * Ginq::map 等で利用
 	 * @return \Closure

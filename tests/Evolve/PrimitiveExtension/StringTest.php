@@ -101,5 +101,14 @@ class StringTest extends UnitTestCase {
 	{
 		$this->assertEquals(strtotime('2015/01/01'), strtotime(Sx::x('2015/01/01')));
 	}
+
+	public function testRandom()
+	{
+		$str = Sx::random(14);
+		$this->assertEquals(14, strlen($str));
+
+		$str_x = Sx::random_x(23);
+		$this->assertEquals(23, $str_x->length());
+	}
 	
 } 
