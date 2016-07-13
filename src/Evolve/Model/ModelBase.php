@@ -699,6 +699,27 @@ class ModelBase extends Model {
 		return $result;
 	}
 
+	protected static function _repopulateAll($source)
+	{
+		$static = new static();
+		$query = "DELETE FROM $static->getClass()";
+		$static->getModelsManager()->execute($query);
+		foreach ($source as $data) {
+			$data = Ax::x($data)->filter(function($v, $k) {
+				list ($key) = explode(')', $k);
+				switch ($key) {
+					case 'created_ts':
+					case 'updated_ts':
+					case '(ref':
+						return false;
+					default:
+						return true;
+				}
+			}, true)->unwrap();
+			(new static())->lightAssign($data)->trySave(__METHOD__, __LINE__);
+		}
+	}
+
 	/**
 	 * @param ResultsetInterface|array|Ginq $result_set
 	 * @return array
