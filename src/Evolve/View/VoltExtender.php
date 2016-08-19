@@ -295,7 +295,8 @@ class VoltExtender {
 		static $elm = null;
 		if (!$elm) {
 			$key = $security->getTokenKey();
-			$value = $security->getToken();
+            $value = $security->getSessionToken();
+			if (!$value) $value = $security->getToken();
 			$elm = "<input type=\"hidden\" name=\"{$key}\" value=\"{$value}\" />";
 		}
 		return $elm;
