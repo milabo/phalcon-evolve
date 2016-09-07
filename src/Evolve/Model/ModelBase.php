@@ -638,6 +638,50 @@ class ModelBase extends Model {
 		return $result;
 	}
 
+    /**
+     * 永続化されているデータと現在のオブジェクトのデータを比較し差分情報を生成する
+     * @param string $name_field
+     * @return array|null
+     */
+	public function makeDiffFromPreserved($name_field)
+    {
+        $id = $this->getId();
+        $data = Ax::x($this->pullArray())->filter(function($v, $k) {
+            switch ($k) {
+                case 'created_ts':
+                case 'updated_ts':
+                    return false;
+                default:
+                    return true;
+            }
+        }, true)->unwrap();
+        if ($id > 0 && $preserved = static::findFirst($id)) {
+            $diff = $preserved->diff($data);
+            if (count($diff) > 0) {
+                return [
+                    'id' => $id,
+                    'name' => $name_field ? $preserved->_getValue($name_field) : '',
+                    'exists' => true,
+                    'data' => Ax::x($diff)->toKeyValueList('field', 'value'),
+                ];
+            }
+        } else {
+            return [
+                'id' => $id,
+                'name' => $name_field ? $data[$name_field] : '',
+                'exists' => false,
+                'data' => Ax::x($data)->map(function($value) {
+                    return [
+                        'old' => null,
+                        'new' => $value,
+                        'diff' => $value,
+                    ];
+                })->toKeyValueList('field', 'value'),
+            ];
+        }
+        return null;
+    }
+
 	/**
 	 * @param Ginq $source
 	 * @param string $name_field
