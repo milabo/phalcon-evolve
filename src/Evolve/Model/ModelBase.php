@@ -650,15 +650,26 @@ class ModelBase extends Model {
 	public function makeDiffFromPreserved($name_field)
     {
         $id = $this->getId();
-        $data = Ax::x($this->pullArray())->filter(function($v, $k) {
-            switch ($k) {
+        $metaData = $this->getModelsMetaData();
+        $attributes = $metaData->getAttributes($this);
+        $columnMap = $metaData->getColumnMap($this);
+        $data = [];
+        foreach ($attributes as $attribute) {
+            $field = $attribute;
+            switch ($field) {
                 case 'created_ts':
                 case 'updated_ts':
-                    return false;
-                default:
-                    return true;
+                    continue;
             }
-        }, true)->unwrap();
+            if (is_array($columnMap) and isset($columnMap[$attribute])) {
+                $field = $columnMap[$attribute];
+            }
+            $value = $this->_getValue($field);
+            if (is_object($value)) {
+                $value = $this->$field;
+            }
+            $data[$field] = $value;
+        }
         if ($id > 0 && $preserved = static::findFirst($id)) {
             $diff = $preserved->diff($data);
             if (count($diff) > 0) {
