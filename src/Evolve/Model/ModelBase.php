@@ -610,6 +610,10 @@ class ModelBase extends Model {
 			$old = $value;
 			$new = $new_value;
 			$diff = "";
+            if ($value instanceof \DateTime) {
+                $value = $value->format('Y-m-d H:i:s');
+                $new_value = self::formatDateForSave($new_value, 'Y-m-d H:i:s');
+            }
 			if (is_object($value)) {
 				$value = "$value";
 			}
