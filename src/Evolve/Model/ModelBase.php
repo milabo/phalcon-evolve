@@ -647,7 +647,7 @@ class ModelBase extends Model {
      * @param string $name_field
      * @return array|null
      */
-	public function makeDiffFromPreserved($name_field)
+	public function makeDiffFromPreserved($name_field = null)
     {
         $id = $this->getId();
         $metaData = $this->getModelsMetaData();
