@@ -657,6 +657,7 @@ class ModelBase extends Model {
         foreach ($attributes as $attribute) {
             $field = $attribute;
             switch ($field) {
+                case 'id':
                 case 'created_ts':
                 case 'updated_ts':
                     continue;
