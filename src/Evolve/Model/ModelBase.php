@@ -656,12 +656,7 @@ class ModelBase extends Model {
         $data = [];
         foreach ($attributes as $attribute) {
             $field = $attribute;
-            switch ($field) {
-                case 'id':
-                case 'created_ts':
-                case 'updated_ts':
-                    continue;
-            }
+            if (Ax::x(['id', 'created_ts', 'updated_ts'])->contains($field)) continue;
             if (is_array($columnMap) and isset($columnMap[$attribute])) {
                 $field = $columnMap[$attribute];
             }
@@ -713,14 +708,7 @@ class ModelBase extends Model {
 			$id = $data['id'];
 			$data = Ax::x($data)->filter(function($v, $k) {
 				list ($key) = explode(')', $k);
-				switch ($key) {
-					case 'created_ts':
-					case 'updated_ts':
-					case '(ref':
-						return false;
-					default:
-						return true;
-				}
+                return !Ax::x(['id', 'created_ts', 'updated_ts', '(ref'])->contains($key);
 			}, true)->unwrap();
 			if ($id > 0 && $self = static::findFirst($id)) {
 				$diff = $self->diff($data, $getter_params);
