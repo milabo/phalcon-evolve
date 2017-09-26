@@ -750,8 +750,8 @@ class ModelBase extends Model {
 	protected static function _repopulateAll($source)
 	{
 		$static = new static();
-		$query = "DELETE FROM $static->getClass()";
-		$static->getModelsManager()->execute($query);
+		$query = "DELETE FROM {$static->getClass()}";
+		$static->getModelsManager()->executeQuery($query);
 		foreach ($source as $data) {
 			$data = Ax::x($data)->filter(function($v, $k) {
 				list ($key) = explode(')', $k);
