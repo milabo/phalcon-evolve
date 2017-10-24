@@ -550,20 +550,16 @@ class ModelBase extends Model {
 
 	/**
 	 * JSON 変換用の配列を取得する
-	 * @param array $ignored_columns 変換後の JSON に含めないカラム名
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function pullArray($ignored_columns = [])
+	public function pullArray()
 	{
 		$metaData = $this->getModelsMetaData();
 		$attributes = $metaData->getAttributes($this);
 		$columnMap = $metaData->getColumnMap($this);
 		$data = [];
 		foreach ($attributes as $attribute) {
-			if (in_array($attribute, $ignored_columns)) {
-				continue;
-			}
 			$field = $attribute;
 			if (is_array($columnMap) and isset($columnMap[$attribute])) {
 				$field = $columnMap[$attribute];
