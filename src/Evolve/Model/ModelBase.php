@@ -737,7 +737,13 @@ class ModelBase extends Model {
 					})->toKeyValueList('field', 'value'),
 				];
 				if ($apply) {
-					(new static())->lightAssign($data)->trySave(__METHOD__, __LINE__);
+					$static = new static();
+					if ($id > 0) {
+						// ID が指定されている場合、次も同じ ID でインポートされる
+						// → AUTO_INCREMENT ではなく指定された ID を設定する
+						$static->id = $id;
+					}
+					$static->lightAssign($data)->trySave(__METHOD__, __LINE__);
 				}
 			}
 		}
