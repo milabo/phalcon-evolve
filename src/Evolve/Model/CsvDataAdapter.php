@@ -21,6 +21,8 @@ class CsvDataAdapter {
 	const FILTER_BOOL = 'bool';
 	const FILTER_SEPARATED_NUMBER = 'separated_number';
 	const FILTER_DATE = 'date';
+	const FILTER_DATETIME2TS = 'datetime2ts'; // "Y-M-D H:i:s" -> timestamp
+	const FILTER_TS2DATETIME = 'ts2datetime'; // timestamp -> "Y-M-D H:i:s"
 
 	/**
 	 * @param $class
@@ -70,8 +72,11 @@ class CsvDataAdapter {
 	 * @param ResultInterface|array|Ginq $source
 	 * @param array $options [
 	 *  'adapter' => 出力に使うStringWriteAdapterInterface,
+	 * 	'filters' => [
+	 * 		'カラム名' => 値に対するフィルタ関数
+	 * 	],
 	 *  'reference_views' => [ // 追加で出力する参照カラム定義
-	 *      'カラム名' => レコード配列を引数に取り値を返す関数
+	 *      'カラム名' => レコード一つ分の配列を引数に取り値を返す関数
 	 *  ]
 	 * ]
 	 */
@@ -79,6 +84,7 @@ class CsvDataAdapter {
 	{
 		$options = Ax::x($options);
 		$adapter = $options->getOrElse('adapter', null);
+		$filters = $options->getOrElse('filters', []);
 		$reference_views = $options->getOrElse('reference_views', []);
 		$meta = $target_model->getModelsMetaData();
 		$attributes = $meta->getAttributes($target_model);
@@ -101,8 +107,14 @@ class CsvDataAdapter {
 		}
 		foreach ($source as $rec) {
 			$rec = Ax::x($rec)
-				->map(function($v) { return is_null($v) ? self::NULL : $v; })
-				->applyKeys($attributes);
+				->applyKeys($attributes)
+				->map(function($v, $k) use ($filters) {
+					if (isset($filters[$k])) {
+						return $this->filtering($v, $filters[$k]);
+					}
+					return $v;
+				})
+				->map(function($v) { return is_null($v) ? self::NULL : $v; });
 			$ref_values = Ax::x($reference_views)
 				->map(function($reference_view) use ($rec) {
 					return $reference_view($rec);
@@ -174,6 +186,10 @@ class CsvDataAdapter {
 					return (new SeparatedNumber())->filter($value);
 				case self::FILTER_DATE:
 					return $this->formatDateForSave($value);
+				case self::FILTER_DATETIME2TS:
+					return $this->anyToTimestamp($value);
+				case self::FILTER_TS2DATETIME:
+					return $this->timestampToDatetime($value, "Y-m-d H:i:s");
 				default:
 					return call_user_func($filter, $value);
 			}
