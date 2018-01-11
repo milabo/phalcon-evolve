@@ -21,7 +21,7 @@ use Phalcon\Evolve\PrimitiveExtension\ArrayExtension as Ax;
  */
 class Email extends Validation\Validator {
 
-	protected function prepareLabel(Validation $validator, $attribute)
+	protected function prepareLabel($validator, $attribute)
 	{
 		$label = $this->getOption("label");
 		if (is_array($label)) {
@@ -33,7 +33,7 @@ class Email extends Validation\Validator {
 		return $label;
 	}
 
-	protected function prepareMessage(Validation $validator, $attribute, $type, $option = "message")
+	protected function prepareMessage($validator, $attribute, $type, $option = "message")
 	{
 		$message = $this->getOption($option);
 		if (is_array($message)) {
@@ -54,7 +54,7 @@ class Email extends Validation\Validator {
 		return $code;
 	}
 
-	public function validate(Validation $validator, $attribute)
+	public function validate($validator, $attribute)
 	{
 		$value = $validator->getValue($attribute);
 
