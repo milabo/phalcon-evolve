@@ -5,7 +5,6 @@ namespace Phalcon\Evolve\View;
 use Phalcon\Validation,
 	Phalcon\Validation\Message;
 use Phalcon\Validation\Validator\PresenceOf,
-	Phalcon\Validation\Validator\Email,
 	Phalcon\Validation\Validator\Between,
 	Phalcon\Validation\Validator\Confirmation,
 	Phalcon\Validation\Validator\InclusionIn,
@@ -16,11 +15,84 @@ use Phalcon\Evolve\PrimitiveExtension\StringExtension as Sx;
 use Phalcon\Evolve\PrimitiveExtension\ArrayExtension as Ax;
 
 /**
+ * Class Email
+ * Phalcon 標準の Email validator が RFC に違反するメールアドレスで無応答障害が発生するため上書き実装
+ * @package Phalcon\Evolve\View
+ */
+class Email extends Validation\Validator {
+
+	protected function prepareLabel(Validation $validator, $attribute)
+	{
+		$label = $this->getOption("label");
+		if (is_array($label)) {
+			$label = $label[$attribute];
+		}
+		if (empty($label)) {
+			$label = $validator->getLabel($attribute);
+		}
+		return $label;
+	}
+
+	protected function prepareMessage(Validation $validator, $attribute, $type, $option = "message")
+	{
+		$message = $this->getOption($option);
+		if (is_array($message)) {
+			$message = $message[$attribute];
+		}
+		if (empty($message)) {
+			$message = $validator->getDefaultMessage($type);
+		}
+		return $message;
+	}
+
+	protected function prepareCode($attribute)
+	{
+		$code = $this->getOption("code");
+		if (is_array($code)) {
+			$code = $code[$attribute];
+		}
+		return $code;
+	}
+
+	public function validate(Validation $validator, $attribute)
+	{
+		$value = $validator->getValue($attribute);
+
+		// 特例として docomo と au は . 連続と @ 前の . を許す（#^ω^）
+		$value = preg_replace_callback('/.+@(docomo|ezweb)\.ne\.jp$/i', function($matches) {
+			$patterns = array('/\.{2,}/', '/\.@/');
+			$replacements = array('.', '@');
+			return preg_replace($patterns, $replacements, $matches[0]);
+		}, $value);
+
+		if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+			$label = $this->prepareLabel($validator, $attribute);
+			$message = $this->prepareMessage($validator, $attribute, "Email");
+			$code = $this->prepareCode($attribute);
+
+			$replacePairs = [":field" => $label];
+
+			$validator->appendMessage(
+				new Message(
+					strtr($message, $replacePairs),
+					$attribute,
+					"Email",
+					$code
+				)
+			);
+			return false;
+		}
+		return true;
+	}
+
+}
+
+/**
  * Translate を使ってエラーメッセージを出力するバリデータ
  * @package Phalcon\Evolve\View
  */
 class TranslatedValidation extends Validation {
-	
+
 	/** @type Translate */
 	protected $translate;
 
@@ -94,7 +166,7 @@ class TranslatedValidation extends Validation {
 		$this->_labels[$field] = $label;
 		return $this;
 	}
-	
+
 	#region short hand and utility
 
 	/**
@@ -307,9 +379,9 @@ class TranslatedValidation extends Validation {
 				'cancelOnFail' => true
 			]))
 			->add($attribute, new InclusionIn([
-			'domain' => $domain,
-			'message' => $domain_name,
-		]));
+				'domain' => $domain,
+				'message' => $domain_name,
+			]));
 		$this->setLabel($attribute, $label);
 		return $this;
 	}
