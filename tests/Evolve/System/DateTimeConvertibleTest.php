@@ -65,6 +65,9 @@ class DateTimeConvertibleTest extends UnitTestCase
 		$result = self::anyToTimestamp(strtotime('2014-11-23 01:12:52'));
 		$this->assertEquals('2014-11-23 01:12:52', date(self::YMD_HIS, $result));
 
+		$result = self::anyToTimestamp('1516076679');
+		$this->assertEquals(1516076679, $result);
+
 		$this->assertNull(self::anyToTimestamp(null));
 	}
 

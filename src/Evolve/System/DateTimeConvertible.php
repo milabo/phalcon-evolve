@@ -66,10 +66,17 @@ trait DateTimeConvertible {
 	{
 		if (is_null($dateTime)) return null;
 		else if (is_integer($dateTime)) {
-			return $dateTime; 
+			return $dateTime;
 		} else if (is_string($dateTime)) {
-			if (trim($dateTime) != "" && $ts = strtotime($dateTime)) return $ts;
-			else return null;
+			if (trim($dateTime) != "") {
+				if (is_numeric($dateTime)) {
+					return intval($dateTime);
+				} else {
+					$ts = strtotime($dateTime);
+					if ($ts) return $ts;
+				}
+			}
+			return null;
 		} else return $dateTime->getTimestamp();
 	}
 
