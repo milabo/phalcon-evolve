@@ -75,7 +75,7 @@ class ExternalCushionPlugin implements IEventListenerPlugin {
 	public function convertExternalUrlToCushionUrl($content)
 	{
 		$pattern = '/(href="|\]\()?https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:@&=+$,%#]+/';
-		return preg_replace_callback($pattern, function($matches) {
+		$content = preg_replace_callback($pattern, function($matches) {
 			$url = Sx::x($matches[0]);
 			$parts = parse_url($url);
 			if (!isset($parts['host'])) {
@@ -92,6 +92,7 @@ class ExternalCushionPlugin implements IEventListenerPlugin {
 			}
 			return $this->cushion_url . '?url=' . urlencode($url);
 		}, $content);
+		return str_replace('__external_direct__', '', $content);
 	}
 
 } 
