@@ -102,6 +102,16 @@ class Clock {
 	}
 
 	/**
+	 * 相対指定で時刻をタイムスタンプで取得
+	 * @param string $timing
+	 * @return integer
+	 */
+	public function fromNowTs($timing)
+	{
+		return strtotime($timing, $this->nowTs());
+	}
+
+	/**
 	 * 相対指定で時刻を取得
 	 * @param string $timing
 	 * @param null $format
