@@ -240,9 +240,28 @@ class ArrayExtension implements \Countable, \Iterator, \ArrayAccess {
 		return $this;
 	}
 
+	/**
+	 * @param $callback
+	 * @return ArrayExtension
+	 */
 	public function map($callback)
 	{
-		$ret = array_map($callback, $this->array);
+		$nop = (new \ReflectionFunction($callback))->getNumberOfParameters();
+		$ret = [];
+		if ($nop == 0) {
+			for ($i = 0; $i < count($this->array); $i++) {
+				$ret[] = call_user_func($callback);
+			}
+		}
+		if ($nop == 1) {
+			foreach ($this->array as $value) {
+				$ret[] = call_user_func($callback, $value);
+			}
+		} else {
+			foreach ($this->array as $key => $value) {
+				$ret[] = call_user_func($callback, $value, $key);
+			}
+		}
 		return self::x($ret);
 	}
 	

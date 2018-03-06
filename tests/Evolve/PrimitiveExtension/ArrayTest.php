@@ -67,6 +67,17 @@ class ArrayTest extends UnitTestCase {
 		$this->assertNull($tree->traverse(['a', 'a-b', 'a-a-a']));
 		$this->assertEquals('default', $tree->traverse(['a', 'a-b'], 'default'));
 	}
+
+	public function testMap()
+	{
+		$arr = Ax::x(['zeroth', 'first', 'second', 'third', 'fourth']);
+		$this->assertEquals(['ZEROTH', 'FIRST', 'SECOND', 'THIRD', 'FOURTH'], $arr->map('strtoupper')->unwrap());
+
+		$arr2 = $arr->applyKeys(['A', 'B', 'C', 'D', 'E'])->map(function($v, $k) {
+			return "$k:$v";
+		});
+		$this->assertEquals(['A:zeroth', 'B:first', 'C:second', 'D:third', 'E:fourth'], $arr2->unwrap());
+	}
 	
 	public function testSearch()
 	{
