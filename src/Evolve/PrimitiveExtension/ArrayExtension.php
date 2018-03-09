@@ -246,6 +246,10 @@ class ArrayExtension implements \Countable, \Iterator, \ArrayAccess {
 	 */
 	public function map($callback)
 	{
+		// intval は第二引数が基数なので 第二引数に index を渡さない array_map を使う
+		if ($callback === 'intval') {
+			return self::x(array_map('intval', $this->array));
+		}
 		$nop = (new \ReflectionFunction($callback))->getNumberOfParameters();
 		$ret = [];
 		if ($nop == 0) {
