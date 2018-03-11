@@ -2,6 +2,7 @@
 
 namespace Phalcon\Evolve\View;
 
+use Phalcon\Evolve\Security\EmailAddress;
 use Phalcon\Validation,
 	Phalcon\Validation\Message;
 use Phalcon\Validation\Validator\PresenceOf,
@@ -58,14 +59,7 @@ class Email extends Validation\Validator {
 	{
 		$value = $validator->getValue($attribute);
 
-		// 特例として docomo と au は . 連続と @ 前の . を許す（#^ω^）
-		$value = preg_replace_callback('/.+@(docomo|ezweb)\.ne\.jp$/i', function($matches) {
-			$patterns = array('/\.{2,}/', '/\.@/');
-			$replacements = array('.', '@');
-			return preg_replace($patterns, $replacements, $matches[0]);
-		}, $value);
-
-		if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+		if (!EmailAddress::isValid($value)) {
 			$label = $this->prepareLabel($validator, $attribute);
 			$message = $this->prepareMessage($validator, $attribute, "Email");
 			$code = $this->prepareCode($attribute);
