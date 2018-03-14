@@ -76,7 +76,13 @@ class ArrayTest extends UnitTestCase {
 		$arr2 = $arr->applyKeys(['A', 'B', 'C', 'D', 'E'])->map(function($v, $k) {
 			return "$k:$v";
 		});
-		$this->assertEquals(['A:zeroth', 'B:first', 'C:second', 'D:third', 'E:fourth'], $arr2->unwrap());
+		$this->assertEquals([
+			'A' => 'A:zeroth',
+			'B' => 'B:first',
+			'C' => 'C:second',
+			'D' => 'D:third',
+			'E' => 'E:fourth'
+		], $arr2->unwrap());
 	}
 	
 	public function testSearch()
