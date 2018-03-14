@@ -253,17 +253,17 @@ class ArrayExtension implements \Countable, \Iterator, \ArrayAccess {
 		$nop = (new \ReflectionFunction($callback))->getNumberOfParameters();
 		$ret = [];
 		if ($nop == 0) {
-			for ($i = 0; $i < count($this->array); $i++) {
-				$ret[] = call_user_func($callback);
+			foreach ($this->array as $key => $value) {
+				$ret[$key] = call_user_func($callback);
 			}
 		}
 		if ($nop == 1) {
-			foreach ($this->array as $value) {
-				$ret[] = call_user_func($callback, $value);
+			foreach ($this->array as $key => $value) {
+				$ret[$key] = call_user_func($callback, $value);
 			}
 		} else {
 			foreach ($this->array as $key => $value) {
-				$ret[] = call_user_func($callback, $value, $key);
+				$ret[$key] = call_user_func($callback, $value, $key);
 			}
 		}
 		return self::x($ret);
