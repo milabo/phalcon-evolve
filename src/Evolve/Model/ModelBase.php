@@ -693,15 +693,61 @@ class ModelBase extends Model {
         return null;
     }
 
+	public static function _validate($validations, $data)
+	{
+		$errors = [];
+		foreach ($validations as $key => $validation) {
+			$v = Ax::x($validation);
+			$d = @$data[$key];
+			$e = [];
+			$is_empty = is_null($d) || $d === "";
+
+			if ($v->getOrElse('required', false)) {
+				if ($is_empty) $e[] = 'required';
+			}
+
+			if (!$is_empty) {
+				if ($v->has('min_value')) {
+					if ($d < $v['min_value']) $e[] = 'min_value:' . $v['min_value'];
+				}
+				if ($v->has('max_value')) {
+					if ($d > $v['max_value']) $e[] = 'max_value:' . $v['max_value'];
+				}
+				if ($v->has('min_length')) {
+					if (mb_strlen($d) < $v['min_length']) $e[] = 'min_length:' . $v['min_length'];
+				}
+				if ($v->has('max_length')) {
+					if (mb_strlen($d) > $v['max_length']) $e[] = 'max_length:' . $v['max_length'];
+				}
+				if ($v->has('pattern')) {
+					if (preg_match($v['pattern'], $d) !== 1) $e[] = 'pattern';
+				}
+			}
+
+			if (!empty($e)) {
+				$errors[$key] = $e;
+			}
+		}
+		return $errors;
+    }
+
 	/**
 	 * @param Ginq $source
 	 * @param string $name_field
 	 * @param bool|false $apply
+	 * @param array $validations フィールド名 => {
+	 * 	'required' => true / false,
+	 * 	'min_value' => int / float,
+	 * 	'max_value' => int / float,
+	 * 	'min_length' => 1 ~ n,
+	 * 	'max_length' => 1 ~ n,
+	 * 	'pattern' => regular expression (str),
+	 * }
 	 * @param array $getter_params フィールド名 => getter 引数配列
 	 * @return array
 	 * @throws \Exception
 	 */
-	protected static function _updateAll($source, $name_field, $apply = false, $getter_params = [])
+	protected static function _updateAll($source, $name_field, $apply = false, $validations = [], $getter_params = [])
 	{
 		$result = [];
 		foreach ($source as $data) {
@@ -710,6 +756,8 @@ class ModelBase extends Model {
 				list ($key) = explode(')', $k);
                 return !Ax::x(['id', 'created_ts', 'updated_ts', '(ref'])->contains($key);
 			}, true)->unwrap();
+			$errors = self::_validate($validations, $data);
+
 			if ($id > 0 && $self = static::findFirst($id)) {
 				$diff = $self->diff($data, $getter_params);
 				if (count($diff) > 0) {
@@ -718,8 +766,9 @@ class ModelBase extends Model {
 						'name' => $name_field ? $self->_getValue($name_field) : '',
 						'exists' => true,
 						'data' => Ax::x($diff)->toKeyValueList('field', 'value'),
+						'errors' => $errors,
 					];
-					if ($apply) {
+					if ($apply && !any($errors)) {
 						$self->lightAssign($data)->trySave(__METHOD__, __LINE__);
 					}
 				}
@@ -735,8 +784,9 @@ class ModelBase extends Model {
 							'diff' => $value,
 						];
 					})->toKeyValueList('field', 'value'),
+					'errors' => $errors,
 				];
-				if ($apply) {
+				if ($apply && !any($errors)) {
 					$static = new static();
 					if ($id > 0) {
 						// ID が指定されている場合、次も同じ ID でインポートされる
