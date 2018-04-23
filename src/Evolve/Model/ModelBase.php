@@ -768,7 +768,7 @@ class ModelBase extends Model {
 						'data' => Ax::x($diff)->toKeyValueList('field', 'value'),
 						'errors' => $errors,
 					];
-					if ($apply && !any($errors)) {
+					if ($apply && empty($errors)) {
 						$self->lightAssign($data)->trySave(__METHOD__, __LINE__);
 					}
 				}
@@ -786,7 +786,7 @@ class ModelBase extends Model {
 					})->toKeyValueList('field', 'value'),
 					'errors' => $errors,
 				];
-				if ($apply && !any($errors)) {
+				if ($apply && empty($errors)) {
 					$static = new static();
 					if ($id > 0) {
 						// ID が指定されている場合、次も同じ ID でインポートされる
