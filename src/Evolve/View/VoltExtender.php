@@ -75,13 +75,14 @@ class VoltExtender {
 	 * @param string $text
 	 * @return string
 	 */
-	public static function url2link($resolved, $text)
+	public static function url2link($resolved, $text = null)
 	{
 		$pattern = '/(href="|src="|\]\()?https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:@&=+$,%#]+/';
 		$resolved = preg_replace_callback($pattern, function($matches) use ($text) {
 			// 既にリンクの場合や Markdown style link の場合はそのまま
 			if (isset($matches[1])) return $matches[0];
-			return "<a href=\"{$matches[0]}\">$text</a>";
+			$_text = $text ? $text : $matches[0];
+			return "<a href=\"{$matches[0]}\">$_text</a>";
 		}, $resolved);
 		return $resolved;
 	}

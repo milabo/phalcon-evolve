@@ -55,6 +55,22 @@ class VoltExtenderTest extends UnitTestCase {
 			"日",
 			VoltExtender::map("0", ['日', '月', '火', '水', '木', '金', '土'])
 		);
+		$this->assertEquals(
+			'aaa <a href="https://example.com/">https://example.com/</a> bbb',
+			VoltExtender::url2link('aaa https://example.com/ bbb')
+		);
+		$this->assertEquals(
+			'aaa <a href="https://example.com/">こちら</a> bbb',
+			VoltExtender::url2link('aaa https://example.com/ bbb', 'こちら')
+		);
+		$this->assertEquals(
+			'aaa[](https://example.com)bbb',
+			VoltExtender::url2link('aaa[](https://example.com)bbb')
+		);
+		$this->assertEquals(
+			'aaa<a href="https://example.com">すでにリンク</a>',
+			VoltExtender::url2link('aaa<a href="https://example.com">すでにリンク</a>')
+		);
 	}
 	
 	public function testFunction()
