@@ -46,6 +46,11 @@ class Request extends \Phalcon\Http\Request {
 	{
 		return $this->convert(parent::get($name, $filters, $defaultValue), $defaultValue);
 	}
+
+	public function getWithoutConvert($name, $filters = null, $defaultValue = null)
+	{
+		return parent::get($name, $filters, $defaultValue);
+	}
 	
 	public function getPost($name=null, $filters=null, $defaultValue=null)
 	{
