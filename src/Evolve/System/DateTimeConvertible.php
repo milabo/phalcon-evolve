@@ -10,6 +10,13 @@ use Phalcon\Evolve\PrimitiveExtension\StringExtension as Sx;
  */
 trait DateTimeConvertible {
 
+	protected static function normalizeDateString($str)
+	{
+		$regex = '/[／\x{30FC}\x{2010}-\x{2015}\x{2212}\x{FF70}-]/u';
+		$str = preg_replace($regex, '-', $str);
+		return mb_convert_kana($str, 'n', 'utf-8');
+	}
+
 	/**
 	 * タイムスタンプを DateTime 型に変換する
 	 * format が指定された場合は書式に従い文字列に変換する。
@@ -47,9 +54,10 @@ trait DateTimeConvertible {
 		if ($source instanceof \DateTime) {
 			if ($format) return $source->format($format);
 			return $source;
-		};
-		if (is_integer($source)) {
+		} else if (is_integer($source)) {
 			$source = date('Y-m-d H:i:s', $source);
+		} else if (is_string($source)) {
+			$source = self::normalizeDateString($source);
 		}
 		$date = new \DateTime($source);
 		if ($format) return $date->format($format);
@@ -72,7 +80,7 @@ trait DateTimeConvertible {
 				if (is_numeric($dateTime)) {
 					return intval($dateTime);
 				} else {
-					$ts = strtotime($dateTime);
+					$ts = strtotime(self::normalizeDateString($dateTime));
 					if ($ts) return $ts;
 				}
 			}
@@ -94,7 +102,7 @@ trait DateTimeConvertible {
 		else if (is_integer($date)) {
 			return date($format, $date);
 		} else if (is_string($date)) {
-			if ($ts = strtotime($date)) return date($format, $ts);
+			if ($ts = strtotime(self::normalizeDateString($date))) return date($format, $ts);
 			else return null;
 		} else if ($date instanceof \DateTIme) {
 			return $date->format($format);

@@ -117,4 +117,16 @@ class DateTimeConvertibleTest extends UnitTestCase
 		$this->assertEquals('2016-02-28', $result);
 	}
 
+	public function testNormalize()
+	{
+		$result = self::normalizeDateString('２０１8ー０７−２７');
+		$this->assertEquals('2018-07-27', $result);
+
+		$result = self::anyToDatetime('20１８ー０７ー２７', 'Y-m-d');
+		$this->assertEquals('2018-07-27', $result);
+
+		$result = self::anyToTimestamp('20１８ー０７ー２７');
+		$this->assertEquals('2018-07-27', date('Y-m-d', $result));
+	}
+
 }
