@@ -109,6 +109,7 @@ class CsvDataAdapter {
 			$rec = Ax::x($rec)
 				->applyKeys($attributes)
 				->map(function($v, $k) use ($filters) {
+					$v = str_replace(["\r\n", "\r"], "\n", $v);
 					if (isset($filters[$k])) {
 						return $this->filtering($v, $filters[$k]);
 					}
@@ -156,7 +157,7 @@ class CsvDataAdapter {
 						$values_count = count($rec);
 						for ($i = 0; $i < $key_count && $i < $values_count; $i++) {
 							$key = $keys[$i];
-							$value = $rec[$i];
+							$value = str_replace(["\r\n", "\r"], "\n", $rec[$i]);
 							if ($value === self::NULL) {
 								$data[$key] = null;
 							} else {
