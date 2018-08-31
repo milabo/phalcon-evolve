@@ -23,7 +23,7 @@ class Auth extends Injectable {
 	/** セッション上に認証情報への参照(indexer_id)を保存するためのデフォルトキー */
 	const DEFAULT_SESSION_KEY = '_auth';
 	/** ユーザあたりの最大セッション数 */
-	const USER_MAX_SESSIONS = 5;
+	const USER_MAX_SESSIONS = 10;
 	
 	/** @var UserInterface; */
 	protected $user;
