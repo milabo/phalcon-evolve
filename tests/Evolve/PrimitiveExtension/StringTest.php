@@ -110,5 +110,24 @@ class StringTest extends UnitTestCase {
 		$str_x = Sx::random_x(23);
 		$this->assertEquals(23, $str_x->length());
 	}
+
+	public function testIsYes()
+	{
+		$this->assertTrue(Sx::x("有り")->isYes());
+		$this->assertTrue(Sx::x("Yes")->isYes());
+		$this->assertTrue(Sx::x("ON")->isYes());
+		$this->assertTrue(Sx::x("True")->isYes());
+		$this->assertTrue(Sx::x("O")->isYes());
+
+		$this->assertFalse(Sx::x("Off")->isYes());
+		$this->assertFalse(Sx::x("false")->isYes());
+		$this->assertFalse(Sx::x("x")->isYes());
+		$this->assertFalse(Sx::x("Off")->isYes());
+
+		$this->assertTrue(Sx::x("表示あり")->isYes(["表示", "削除"]));
+		$this->assertTrue(Sx::x("削除する")->isYes(["表示", "削除"]));
+		$this->assertFalse(Sx::x("表示しない")->isYes(["表示", "削除"]));
+		$this->assertFalse(Sx::x("申請する")->isYes(["表示", "削除"]));
+	}
 	
 } 

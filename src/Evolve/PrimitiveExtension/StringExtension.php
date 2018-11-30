@@ -8,6 +8,14 @@ namespace Phalcon\Evolve\PrimitiveExtension;
  */
 class StringExtension {
 
+	private $true_signs_startswith = [
+		"y", "on", "true", "1",
+		"有", "あり", "する", "はい", "○", "◯",
+	];
+	private $true_signs_equals = [
+		"o",
+	];
+
 	/** @var string */
 	private $string;
 
@@ -106,11 +114,44 @@ class StringExtension {
 
 	/**
 	 * @param string|mixed $string
+	 * @param bool $ignore_case
 	 * @return bool
 	 */
-	public function equals($string)
+	public function equals($string, $ignore_case = false)
 	{
-		return $this->string === strval($string);
+		$a = $this->string;
+		$b = strval($string);
+		if ($ignore_case) {
+			$a = strtolower($a);
+			$b = strtolower($b);
+		}
+		return $a === $b;
+	}
+
+	/**
+	 * @param array $verbs
+	 * @return bool
+	 */
+	public function isYes($verbs = [])
+	{
+		// 動詞そのものなら true として扱う
+		// 例「表示」「削除」
+		if ($this->in($verbs)) {
+			return true;
+		}
+		// 動詞を除いたのこりが true_signs に該当するか
+		$remain = self::x(str_replace($verbs, "", $this->string));
+		foreach ($this->true_signs_startswith as $sign) {
+			if ($remain->startsWith($sign, true)) {
+				return true;
+			}
+		}
+		foreach ($this->true_signs_equals as $sign) {
+			if ($remain->equals($sign, true)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/*
