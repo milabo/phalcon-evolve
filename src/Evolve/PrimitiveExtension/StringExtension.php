@@ -298,7 +298,7 @@ class StringExtension {
 	 * replace(array(string $from => string $to) $replacements, int $limit = PHP_MAX_INT)
 	 * replace(string $from, string $to, int $limit = PHP_MAX_INT)
 	 * 
-	 * @param string $from
+	 * @param string|array $from
 	 * @param string $to
 	 * @param int $limit
 	 * @param bool $ignore_case
