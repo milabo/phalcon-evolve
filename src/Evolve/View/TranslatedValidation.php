@@ -329,9 +329,9 @@ class TranslatedValidation extends Validation {
 		}
 		if ($options->any()) {
 			$this->add($attribute, new Between([
-				"minimum" => $options['minimum'],
-				"maximum" => $options['maximum'],
-				"message" => $options['messageMinimum'] . $options['messageMaximum'],
+				'minimum' => $options['minimum'],
+				'maximum' => $options['maximum'],
+				'message' => $options['messageMinimum'] . $options['messageMaximum'],
 			]));
 		}
 		$this->setLabel($attribute, $label);
