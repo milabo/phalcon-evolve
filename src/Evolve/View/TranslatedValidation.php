@@ -328,7 +328,11 @@ class TranslatedValidation extends Validation {
 			$options['messageMaximum'] = $this->translate->minLength($maxValue);
 		}
 		if ($options->any()) {
-			$this->add($attribute, new Between($options->unwrap()));
+			$this->add($attribute, new Between([
+				"minimum" => $options['minimum'],
+				"maximum" => $options['maximum'],
+				"message" => $options['messageMinimum'] . $options['messageMaximum'],
+			]));
 		}
 		$this->setLabel($attribute, $label);
 		return $this;
