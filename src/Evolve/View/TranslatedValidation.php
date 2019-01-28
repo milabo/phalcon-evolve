@@ -321,18 +321,14 @@ class TranslatedValidation extends Validation {
 		$options = Ax::zero();
 		if (!is_null($minValue)) {
 			$options['minimum'] = $minValue;
-			$options['messageMinimum'] = $this->translate->minValue($minValue);
+			$options['message'] = $this->translate->minValue($minValue);
 		}
 		if (!is_null($maxValue)) {
 			$options['maximum'] = $maxValue;
-			$options['messageMaximum'] = $this->translate->maxValue($maxValue);
+			$options['message'] .= $this->translate->maxValue($maxValue);
 		}
 		if ($options->any()) {
-			$this->add($attribute, new Between([
-				'minimum' => $options['minimum'],
-				'maximum' => $options['maximum'],
-				'message' => $options['messageMinimum'] . $options['messageMaximum'],
-			]));
+			$this->add($attribute, new Between($options->unwrap()));
 		}
 		$this->setLabel($attribute, $label);
 		return $this;
