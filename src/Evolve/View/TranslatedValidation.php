@@ -82,6 +82,89 @@ class Email extends Validation\Validator {
 }
 
 /**
+ * Class Date
+ * @package Phalcon\Evolve\View
+ */
+class Date extends Validation\Validator {
+	/** @var  string attribute */
+	private $year;
+	/** @var  string attribute */
+	private $month;
+	/** @var  string attribute */
+	private $day;
+
+	/**
+	 * @param string $year
+	 * @param string $month
+	 * @param string $day
+	 */
+	public function setAttributes($year, $month, $day) {
+		$this->year = $year;
+		$this->month = $month;
+		$this->day = $day;
+	}
+
+	protected function prepareLabel($validator, $attribute)
+	{
+		$label = $this->getOption("label");
+		if (is_array($label)) {
+			$label = $label[$attribute];
+		}
+		if (empty($label)) {
+			$label = $validator->getLabel($attribute);
+		}
+		return $label;
+	}
+
+	protected function prepareMessage($validator, $attribute, $type, $option = "message")
+	{
+		$message = $this->getOption($option);
+		if (is_array($message)) {
+			$message = $message[$attribute];
+		}
+		if (empty($message)) {
+			$message = $validator->getDefaultMessage($type);
+		}
+		return $message;
+	}
+
+	protected function prepareCode($attribute)
+	{
+		$code = $this->getOption("code");
+		if (is_array($code)) {
+			$code = $code[$attribute];
+		}
+		return $code;
+	}
+
+	public function validate($validator, $attribute)
+	{
+		$year = $validator->getValue($this->year);
+		$month = $validator->getValue($this->month);
+		$day = $validator->getValue($this->day);
+
+		if ( ! checkdate($month, $day, $year)) {
+			$label = $this->prepareLabel($validator, $attribute);
+			$message = $this->prepareMessage($validator, $attribute, "invalid_date");
+			$code = $this->prepareCode($attribute);
+
+			$replacePairs = [":field" => $label];
+
+			$validator->appendMessage(
+				new Message(
+					strtr($message, $replacePairs),
+					$attribute,
+					"invalid_date",
+					$code
+				)
+			);
+			return false;
+		}
+		return true;
+	}
+}
+
+/**
  * Translate を使ってエラーメッセージを出力するバリデータ
  * @package Phalcon\Evolve\View
  */
@@ -187,6 +270,21 @@ class TranslatedValidation extends Validation {
 	}
 
 	/**
+	 * 日付フィールドの検証を設定するショートハンド
+	 * @param array $attributes [date, year, month, day]
+	 * @param string $label
+	 * @return self $this
+	 */
+	public function dateField($attributes, $label)
+	{
+		$validator = new Date();
+		$validator->setAttributes($attributes['year'], $attributes['month'], $attributes['day']);
+		$this->add($attributes['date'], $validator);
+		$this->setLabel($attributes['date'], $label);
+		return $this;
+	}
+
+	/**
 	 * テキストフィールドの検証を設定するショートハンド
 	 * @param string $attribute
 	 * @param string $label
@@ -273,7 +371,7 @@ class TranslatedValidation extends Validation {
 			->add($attribute, new Confirmation([
 				'with' => $attribute_confirm
 			]))
-			;
+		;
 		$options = Ax::zero();
 		if ($minLength > 0) {
 			$options['min'] = $minLength;
