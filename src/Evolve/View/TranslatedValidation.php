@@ -16,6 +16,82 @@ use Phalcon\Evolve\PrimitiveExtension\StringExtension as Sx;
 use Phalcon\Evolve\PrimitiveExtension\ArrayExtension as Ax;
 
 /**
+ * Class ValidatorBase
+ * @package Phalcon\Evolve\View
+ */
+class ValidatorBase extends Validation\Validator {
+
+	/**
+	 * デフォルトを設定するために偽オーバーライド(したかった…)
+	 * @param $key
+	 * @param $default
+	 * @return mixed
+	 */
+	protected function getOptionBySpecifyDefault($key, $default)
+	{
+		$value = parent::getOption($key);
+		if (is_null($value)) return $default;
+		else return $value;
+	}
+
+	protected function prepareLabel($validator, $attribute)
+	{
+		$label = $this->getOption("label");
+		if (is_array($label)) {
+			$label = $label[$attribute];
+		}
+		if (empty($label)) {
+			$label = $validator->getLabel($attribute);
+		}
+		return $label;
+	}
+
+	protected function prepareMessage($validator, $attribute, $type, $option = "message")
+	{
+		$message = $this->getOption($option);
+		if (is_array($message)) {
+			$message = $message[$attribute];
+		}
+		if (empty($message)) {
+			$message = $validator->getDefaultMessage($type);
+		}
+		return $message;
+	}
+
+	protected function prepareCode($attribute)
+	{
+		$code = $this->getOption("code");
+		if (is_array($code)) {
+			$code = $code[$attribute];
+		}
+		return $code;
+	}
+
+	protected function appendMessageWithLabel($validator, $attribute, $type)
+	{
+		$label = $this->prepareLabel($validator, $attribute);
+		$message = $this->prepareMessage($validator, $attribute, $type);
+		$code = $this->prepareCode($attribute);
+
+		$replacePairs = [":field" => $label];
+
+		$validator->appendMessage(
+			new Message(
+				strtr($message, $replacePairs),
+				$attribute,
+				$type,
+				$code
+			)
+		);
+	}
+
+	public function validate($validator, $attribute)
+	{
+		throw new \Exception('Unimplemented.');
+	}
+}
+
+/**
  * Class Email
  * Phalcon 標準の Email validator が RFC に違反するメールアドレスで無応答障害が発生するため上書き実装
  * @package Phalcon\Evolve\View
@@ -84,80 +160,67 @@ class Email extends Validation\Validator {
 /**
  * Class Date
  * @package Phalcon\Evolve\View
+ *
+ * <code>
+ * // most simply
+ * $validator->add('date', new Date([
+ *		'year_attribute' => 'year',
+ *		'month_attribute' => 'month',
+ *		'day_attribute' => 'day'
+ * ]));
+ *
+ * $validator->add('date', new Date([
+ * 		'required' => true,
+ *		'year_attribute' => 'year',
+ *		'month_attribute' => 'month',
+ *		'day_attribute' => 'day',
+ * 		'message.presence_of' => 'choose_one'
+ * ]));
+ *
+ * </code>
  */
-class Date extends Validation\Validator {
-	/** @var  string attribute */
-	private $year;
-	/** @var  string attribute */
-	private $month;
-	/** @var  string attribute */
-	private $day;
-
-	/**
-	 * @param string $year
-	 * @param string $month
-	 * @param string $day
-	 */
-	public function setAttributes($year, $month, $day) {
-		$this->year = $year;
-		$this->month = $month;
-		$this->day = $day;
-	}
-
-	protected function prepareLabel($validator, $attribute)
-	{
-		$label = $this->getOption("label");
-		if (is_array($label)) {
-			$label = $label[$attribute];
-		}
-		if (empty($label)) {
-			$label = $validator->getLabel($attribute);
-		}
-		return $label;
-	}
-
-	protected function prepareMessage($validator, $attribute, $type, $option = "message")
-	{
-		$message = $this->getOption($option);
-		if (is_array($message)) {
-			$message = $message[$attribute];
-		}
-		if (empty($message)) {
-			$message = $validator->getDefaultMessage($type);
-		}
-		return $message;
-	}
-
-	protected function prepareCode($attribute)
-	{
-		$code = $this->getOption("code");
-		if (is_array($code)) {
-			$code = $code[$attribute];
-		}
-		return $code;
-	}
+class Date extends ValidatorBase {
 
 	public function validate($validator, $attribute)
 	{
-		$year = $validator->getValue($this->year);
-		$month = $validator->getValue($this->month);
-		$day = $validator->getValue($this->day);
+		$required = $this->getOptionBySpecifyDefault('required', false);
+		$presence_of = $this->getOptionBySpecifyDefault('message.presence_of', 'presence_of');
+
+		#region get attribute to value
+		$year_attribute = $this->getOption('year_attribute');
+		$month_attribute = $this->getOption('month_attribute');
+		$day_attribute = $this->getOption('day_attribute');
+
+		$year = $validator->getValue($year_attribute);
+		$month = $validator->getValue($month_attribute);
+		$day = $validator->getValue($day_attribute);
+		#end region
+
+		if (is_null($year)) throw new \Exception("year (attribute : $year_attribute) is null.");
+		if (is_null($month)) throw new \Exception("month (attribute : $month_attribute) is null.");
+		if (is_null($day)) throw new \Exception("day (attribute : $day_attribute) is null.");
+
+		if ($required) {
+			if ($year === '' && $month === '' && $day === '') {
+				// default message is presence_of. possible to customise by 'message.presence_of' option.
+				$this->appendMessageWithLabel($validator, $attribute, $presence_of);
+				return false;
+			}
+		} else {
+			// 必須じゃないかつ、全て空だったらスルーする
+			if ($year === '' && $month === '' && $day === '') {
+				return true;
+			}
+		}
+
+		// checkdateに空文字を渡すとWarningが出る
+		if ($year === '' || $month === '' || $day === '') {
+			$this->appendMessageWithLabel($validator, $attribute, "invalid_date");
+			return false;
+		}
 
 		if ( ! checkdate($month, $day, $year)) {
-			$label = $this->prepareLabel($validator, $attribute);
-			$message = $this->prepareMessage($validator, $attribute, "invalid_date");
-			$code = $this->prepareCode($attribute);
-
-			$replacePairs = [":field" => $label];
-
-			$validator->appendMessage(
-				new Message(
-					strtr($message, $replacePairs),
-					$attribute,
-					"invalid_date",
-					$code
-				)
-			);
+			$this->appendMessageWithLabel($validator, $attribute, "invalid_date");
 			return false;
 		}
 		return true;
@@ -273,13 +336,18 @@ class TranslatedValidation extends Validation {
 	 * 日付フィールドの検証を設定するショートハンド
 	 * @param array $attributes [date, year, month, day]
 	 * @param string $label
+	 * @param bool $required
 	 * @return self $this
 	 */
-	public function dateField($attributes, $label)
-	{
-		$validator = new Date();
-		$validator->setAttributes($attributes['year'], $attributes['month'], $attributes['day']);
-		$this->add($attributes['date'], $validator);
+	public function dateField($attributes, $label, $required) {
+		// $attributes['date'] はラベルとメッセージを設定するためだけに使用
+		// 中身は見てません
+		$this->add($attributes['date'], new Date([
+			'required' => $required,
+			'year_attribute' => $attributes['year'],
+			'month_attribute' => $attributes['month'],
+			'day_attribute' => $attributes['day']
+		]));
 		$this->setLabel($attributes['date'], $label);
 		return $this;
 	}
