@@ -22,15 +22,23 @@ use Phalcon\Evolve\PrimitiveExtension\ArrayExtension as Ax;
 class ValidatorBase extends Validation\Validator {
 
 	/**
-	 * デフォルトを設定するために偽オーバーライド(したかった…)
-	 * @param $key
-	 * @param $default
+	 * デフォルトを設定するためにオーバーライド
+	 * @param string|array $keys
 	 * @return mixed
+	 * @throws \Exception
 	 */
-	protected function getOptionBySpecifyDefault($key, $default)
+	public function getOption($keys)
 	{
+		if (is_array($keys)) {
+			$default = $keys['default'];
+			$key = $keys['key'];
+		} else if (is_string($keys)) {
+			$key = $keys;
+		} else {
+			throw new \Exception('$keys (' . gettype($keys) .  ') is not valid type.');
+		}
 		$value = parent::getOption($key);
-		if (is_null($value)) return $default;
+		if (is_null($value) && isset($default)) return $default;
 		else return $value;
 	}
 
@@ -67,7 +75,13 @@ class ValidatorBase extends Validation\Validator {
 		return $code;
 	}
 
-	protected function appendMessageWithLabel($validator, $attribute, $type)
+	/**
+	 * フィールド名のみ設定してシンプルなメッセージを追加する
+	 * @param $validator
+	 * @param $attribute
+	 * @param $type 'err.validate.$type'
+	 */
+	protected function appendMessageSimply($validator, $attribute, $type)
 	{
 		$label = $this->prepareLabel($validator, $attribute);
 		$message = $this->prepareMessage($validator, $attribute, $type);
@@ -183,13 +197,13 @@ class Date extends ValidatorBase {
 
 	public function validate($validator, $attribute)
 	{
-		$required = $this->getOptionBySpecifyDefault('required', false);
-		$presence_of = $this->getOptionBySpecifyDefault('message.presence_of', 'presence_of');
+		$required = $this->getOption([ 'key' => 'required', 'default' => false ]);
+		$presence_of = $this->getOption(['key' => 'message.presence_of', 'default' => 'presence_of']);
 
 		#region get attribute to value
-		$year_attribute = $this->getOption('year_attribute');
-		$month_attribute = $this->getOption('month_attribute');
-		$day_attribute = $this->getOption('day_attribute');
+		$year_attribute = $this->getOption('year');
+		$month_attribute = $this->getOption('month');
+		$day_attribute = $this->getOption('day');
 
 		$year = $validator->getValue($year_attribute);
 		$month = $validator->getValue($month_attribute);
@@ -202,8 +216,8 @@ class Date extends ValidatorBase {
 
 		if ($required) {
 			if ($year === '' && $month === '' && $day === '') {
-				// default message is presence_of. possible to customise by 'message.presence_of' option.
-				$this->appendMessageWithLabel($validator, $attribute, $presence_of);
+				// デフォルトはpresence_of 'message.presence_of'オプションでカスタマイズできる
+				$this->appendMessageSimply($validator, $attribute, $presence_of);
 				return false;
 			}
 		} else {
@@ -214,13 +228,9 @@ class Date extends ValidatorBase {
 		}
 
 		// checkdateに空文字を渡すとWarningが出る
-		if ($year === '' || $month === '' || $day === '') {
-			$this->appendMessageWithLabel($validator, $attribute, "invalid_date");
-			return false;
-		}
-
-		if ( ! checkdate($month, $day, $year)) {
-			$this->appendMessageWithLabel($validator, $attribute, "invalid_date");
+		if ($year === '' || $month === '' || $day === ''
+			|| ! checkdate($month, $day, $year)) {
+			$this->appendMessageSimply($validator, $attribute, "invalid_date");
 			return false;
 		}
 		return true;
@@ -344,9 +354,9 @@ class TranslatedValidation extends Validation {
 		// 中身は見てません
 		$this->add($attributes['date'], new Date([
 			'required' => $required,
-			'year_attribute' => $attributes['year'],
-			'month_attribute' => $attributes['month'],
-			'day_attribute' => $attributes['day']
+			'year' => $attributes['year'],
+			'month' => $attributes['month'],
+			'day' => $attributes['day']
 		]));
 		$this->setLabel($attributes['date'], $label);
 		return $this;
