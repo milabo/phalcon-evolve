@@ -16,6 +16,96 @@ use Phalcon\Evolve\PrimitiveExtension\StringExtension as Sx;
 use Phalcon\Evolve\PrimitiveExtension\ArrayExtension as Ax;
 
 /**
+ * Class ValidatorBase
+ * @package Phalcon\Evolve\View
+ */
+class ValidatorBase extends Validation\Validator {
+
+	/**
+	 * デフォルトを設定するためにオーバーライド
+	 * @param string|array $keys
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function getOption($keys)
+	{
+		if (is_array($keys)) {
+			$default = $keys['default'];
+			$key = $keys['key'];
+		} else if (is_string($keys)) {
+			$key = $keys;
+		} else {
+			throw new \Exception('$keys (' . gettype($keys) .  ') is not valid type.');
+		}
+		$value = parent::getOption($key);
+		if (is_null($value) && isset($default)) return $default;
+		else return $value;
+	}
+
+	protected function prepareLabel($validator, $attribute)
+	{
+		$label = $this->getOption("label");
+		if (is_array($label)) {
+			$label = $label[$attribute];
+		}
+		if (empty($label)) {
+			$label = $validator->getLabel($attribute);
+		}
+		return $label;
+	}
+
+	protected function prepareMessage($validator, $attribute, $type, $option = "message")
+	{
+		$message = $this->getOption($option);
+		if (is_array($message)) {
+			$message = $message[$attribute];
+		}
+		if (empty($message)) {
+			$message = $validator->getDefaultMessage($type);
+		}
+		return $message;
+	}
+
+	protected function prepareCode($attribute)
+	{
+		$code = $this->getOption("code");
+		if (is_array($code)) {
+			$code = $code[$attribute];
+		}
+		return $code;
+	}
+
+	/**
+	 * フィールド名のみ設定してシンプルなメッセージを追加する
+	 * @param $validator
+	 * @param $attribute
+	 * @param $type 'err.validate.$type'
+	 */
+	protected function appendMessageSimply($validator, $attribute, $type)
+	{
+		$label = $this->prepareLabel($validator, $attribute);
+		$message = $this->prepareMessage($validator, $attribute, $type);
+		$code = $this->prepareCode($attribute);
+
+		$replacePairs = [":field" => $label];
+
+		$validator->appendMessage(
+			new Message(
+				strtr($message, $replacePairs),
+				$attribute,
+				$type,
+				$code
+			)
+		);
+	}
+
+	public function validate($validator, $attribute)
+	{
+		throw new \Exception('Unimplemented.');
+	}
+}
+
+/**
  * Class Email
  * Phalcon 標準の Email validator が RFC に違反するメールアドレスで無応答障害が発生するため上書き実装
  * @package Phalcon\Evolve\View
@@ -79,6 +169,72 @@ class Email extends Validation\Validator {
 		return true;
 	}
 
+}
+
+/**
+ * Class Date
+ * @package Phalcon\Evolve\View
+ *
+ * <code>
+ * // most simply
+ * $validator->add('date', new Date([
+ *		'year_attribute' => 'year',
+ *		'month_attribute' => 'month',
+ *		'day_attribute' => 'day'
+ * ]));
+ *
+ * $validator->add('date', new Date([
+ * 		'required' => true,
+ *		'year_attribute' => 'year',
+ *		'month_attribute' => 'month',
+ *		'day_attribute' => 'day',
+ * 		'message.presence_of' => 'choose_one'
+ * ]));
+ *
+ * </code>
+ */
+class Date extends ValidatorBase {
+
+	public function validate($validator, $attribute)
+	{
+		$required = $this->getOption([ 'key' => 'required', 'default' => false ]);
+		$presence_of = $this->getOption(['key' => 'message.presence_of', 'default' => 'presence_of']);
+
+		#region get attribute to value
+		$year_attribute = $this->getOption('year');
+		$month_attribute = $this->getOption('month');
+		$day_attribute = $this->getOption('day');
+
+		$year = $validator->getValue($year_attribute);
+		$month = $validator->getValue($month_attribute);
+		$day = $validator->getValue($day_attribute);
+		#end region
+
+		if (is_null($year)) throw new \Exception("year (attribute : $year_attribute) is null.");
+		if (is_null($month)) throw new \Exception("month (attribute : $month_attribute) is null.");
+		if (is_null($day)) throw new \Exception("day (attribute : $day_attribute) is null.");
+
+		if ($required) {
+			if ($year === '' && $month === '' && $day === '') {
+				// デフォルトはpresence_of 'message.presence_of'オプションでカスタマイズできる
+				$this->appendMessageSimply($validator, $attribute, $presence_of);
+				return false;
+			}
+		} else {
+			// 必須じゃないかつ、全て空だったらスルーする
+			if ($year === '' && $month === '' && $day === '') {
+				return true;
+			}
+		}
+
+		// checkdateに空文字を渡すとWarningが出る
+		if ($year === '' || $month === '' || $day === ''
+			|| ! checkdate($month, $day, $year)) {
+			$this->appendMessageSimply($validator, $attribute, "invalid_date");
+			return false;
+		}
+		return true;
+	}
 }
 
 /**
@@ -187,6 +343,26 @@ class TranslatedValidation extends Validation {
 	}
 
 	/**
+	 * 日付フィールドの検証を設定するショートハンド
+	 * @param array $attributes [date, year, month, day]
+	 * @param string $label
+	 * @param bool $required
+	 * @return self $this
+	 */
+	public function dateField($attributes, $label, $required) {
+		// $attributes['date'] はラベルとメッセージを設定するためだけに使用
+		// 中身は見てません
+		$this->add($attributes['date'], new Date([
+			'required' => $required,
+			'year' => $attributes['year'],
+			'month' => $attributes['month'],
+			'day' => $attributes['day']
+		]));
+		$this->setLabel($attributes['date'], $label);
+		return $this;
+	}
+
+	/**
 	 * テキストフィールドの検証を設定するショートハンド
 	 * @param string $attribute
 	 * @param string $label
@@ -273,7 +449,7 @@ class TranslatedValidation extends Validation {
 			->add($attribute, new Confirmation([
 				'with' => $attribute_confirm
 			]))
-			;
+		;
 		$options = Ax::zero();
 		if ($minLength > 0) {
 			$options['min'] = $minLength;
