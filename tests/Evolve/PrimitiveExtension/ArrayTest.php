@@ -84,6 +84,21 @@ class ArrayTest extends UnitTestCase {
 			'E' => 'E:fourth'
 		], $arr2->unwrap());
 	}
+
+	public function testFold()
+	{
+		$actual = Ax::x(['a', 'b', 'c'])
+			->fold(function ($acc, $value) {
+				return $acc . $value;
+			}, '');
+		$this->assertEquals('abc', $actual);
+	}
+
+	public function testFlatten()
+	{
+		$actual = Ax::x(['a', ['b', 'c'], ['d'], 'e', [['f'], ['g']]])->flatten()->toList();
+		$this->assertEquals(['a', 'b', 'c', 'd', 'e', ['f'], ['g']], $actual);
+	}
 	
 	public function testSearch()
 	{
