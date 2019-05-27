@@ -87,10 +87,10 @@ class ArrayTest extends UnitTestCase {
 
 	public function testFold()
 	{
-		$actual = Ax::x(['a', 'b', 'c'])
+		$actual = Ax::x(['b', 'c'])
 			->fold(function ($acc, $value) {
 				return $acc . $value;
-			}, '');
+			}, 'a');
 		$this->assertEquals('abc', $actual);
 	}
 
