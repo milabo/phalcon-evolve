@@ -402,7 +402,41 @@ class ArrayExtension implements \Countable, \Iterator, \ArrayAccess {
 		}
 		return self::x($ret);
 	}
-	
+
+	/**
+	 * 配列を畳み込む
+	 * @param callable $callback
+	 *   第一引数には畳み込みの途中結果、第二引数には要素が渡され、畳み込み結果を返す関数。
+	 * @param mixed $initialValue 畳み込みの初期値
+	 * @return mixed
+	 */
+	public function fold($callback, $initialValue)
+	{
+		$ret = $initialValue;
+		foreach ($this->array as $item) {
+			$ret = $callback($ret, $item);
+		}
+		return $ret;
+	}
+
+	/**
+	 * 入れ子になった配列を平坦化する。
+	 * 多重に入れ子になっていても再帰的に平坦化しない。
+	 * @return ArrayExtension
+	 */
+	public function flatten()
+	{
+		$flattened = $this->fold(function ($acc, $value) {
+			if (is_array($value)) {
+				return array_merge($acc, $value);
+			} else {
+				$acc[] = $value;
+				return $acc;
+			}
+		}, []);
+		return static::x($flattened);
+	}
+
 	#endregion
 	
 	#region convert
