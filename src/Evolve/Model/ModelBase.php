@@ -33,6 +33,27 @@ class ModelBase extends Model {
 	// インスタンスキャッシュ
 	/** @type array|self[] */
 	protected static $instances = [];
+
+	// 変更を加えたテーブル名を通知する
+    protected static $table_wrote_handler;
+
+    /**
+     * 変更を加えたテーブル名の通知先ハンドラを設定する
+     * @param callable $handler
+     */
+    public static function setTableWroteHandler($handler)
+    {
+        self::$table_wrote_handler = $handler;
+    }
+
+    protected function notifyTableWrote($table_name = null) {
+        if (isset(self::$table_wrote_handler)) {
+            call_user_func(
+                self::$table_wrote_handler,
+                isset($table_name) ? $table_name : $this->getSource()
+            );
+        }
+    }
 	
 	#region cache
 	
@@ -412,13 +433,21 @@ class ModelBase extends Model {
 		if ($this->_destroy) {
 			if ($destroy_field = $this->getDestroyField()) {
 				$this->$destroy_field = 1;
+				$this->notifyTableWrote();
 				return parent::save($data, $whiteList);
 			} else {
 				return $this->delete();
 			}
 		} else {
+            $this->notifyTableWrote();
 			return parent::save($data, $whiteList);
 		}
+	}
+
+    public function delete()
+    {
+        parent::delete();
+        $this->notifyTableWrote();
 	}
 
 	/**
