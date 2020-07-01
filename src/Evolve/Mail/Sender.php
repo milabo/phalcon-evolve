@@ -21,58 +21,58 @@ class Sender {
 	const MAIL_ENCODING = 'ISO-2022-JP';
 
 	/** @var \Net_SMTP */
-	protected $smtp = null;
+	private $smtp = null;
 
 	/** @var string */
-	protected $host;
+	private $host;
 
 	/** @var string */
-	protected $user = null;
+	private $user = null;
 
 	/** @var string */
-	protected $password = null;
+	private $password = null;
 
 	/** @var bool */
-	protected $is_connected = false;
+	private $is_connected = false;
 
 	/** @var array|string */
-	protected $sender_address;
+	private $sender_address;
 
 	/** @var string */
-	protected $subject;
+	private $subject;
 
 	/** @var array|string */
-	protected $receiver_addresses;
+	private $receiver_addresses;
 
 	/** @var array|string */
-	protected $cc_addresses;
+	private $cc_addresses;
 
 	/** @var array|string */
-	protected $bcc_addresses;
+	private $bcc_addresses;
 
 	/** @var string 返信先アドレス */
-	protected $reply_to;
+	private $reply_to;
 
 	/** @var string エラー返送先アドレス */
-	protected $return_path;
+	private $return_path;
 
 	/** @var \Phalcon\Mvc\View\Engine\Volt */
-	protected $volt;
+	private $volt;
 
 	/** @var string */
-	protected $template_dir;
+	private $template_dir;
 
 	/** @var \Phalcon\Logger\AdapterInterface */
-	protected $logger;
+	private $logger;
 
 	/** @var string[]|array */
-	protected $additional_headers = array();
+	private $additional_headers = array();
 
 	/** @var string[]|array */
-	protected $last_headers;
+	private $last_headers;
 
 	/** @var string */
-	protected	$last_body;
+	private	$last_body;
 
 	/**
 	 * @param array $settings
@@ -460,7 +460,7 @@ class Sender {
 	 * @param array $headers (REF) The list of the mail headers to fill up.
 	 * @param mixed $param The parameter of Mail - TO, CC, BCC.
 	 */
-	protected static function procParam($headername, array &$recipients, array &$headers, $param) {
+	private static function procParam($headername, array &$recipients, array &$headers, $param) {
 		$headers[$headername] = "";
 		if (is_array($param)) {
 			$dlm = '';
@@ -484,7 +484,7 @@ class Sender {
 	 * @param string $subject The mail subject.
 	 * @return string The encoded subject.
 	 */
-	protected static function encodeHeader($subject)
+	private static function encodeHeader($subject)
 	{
 		$subject = mb_convert_encoding($subject, self::MAIL_ENCODING, self::INTERNAL_ENCODING);
 		mb_internal_encoding(self::MAIL_ENCODING);
