@@ -15,7 +15,7 @@ require_once 'Mail/mime.php';
  *
  * @package Phalcon\Evolve\Mail
  */
-class Sender {
+class Sender implements SenderInterface {
 
 	const INTERNAL_ENCODING = 'UTF-8';
 	const MAIL_ENCODING = 'ISO-2022-JP';
