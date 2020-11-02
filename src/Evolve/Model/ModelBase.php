@@ -461,7 +461,7 @@ class ModelBase extends Model {
 			if (empty($whiteList) or Ax::x($whiteList)->contains($field)) {
 				$this->_setValue($field, $value);
 				// 形式チェックのため getter 呼び出し
-				$this->_getValue($field, $value);
+				$this->_getValue($field);
 			}
 		}
 		return $this;
