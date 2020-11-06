@@ -460,8 +460,6 @@ class ModelBase extends Model {
 		foreach ($data as $field => $value) {
 			if (empty($whiteList) or Ax::x($whiteList)->contains($field)) {
 				$this->_setValue($field, $value);
-				// 形式チェックのため getter 呼び出し
-				$this->_getValue($field);
 			}
 		}
 		return $this;
