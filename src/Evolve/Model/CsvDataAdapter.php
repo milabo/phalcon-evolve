@@ -23,7 +23,7 @@ class CsvDataAdapter {
 	const FILTER_DATE = 'date';
 	const FILTER_DATETIME2TS = 'datetime2ts'; // "Y-M-D H:i:s" -> timestamp
 	const FILTER_TS2DATETIME = 'ts2datetime'; // timestamp -> "Y-M-D H:i:s"
-	const FILTER_SEPARATED_COMMA = 'separated_comma';
+	const FILTER_SEPARATED_COMMA = 'separated_comma'; // "string1,string2" -> array["string1","string2"]
 
 	/**
 	 * @param $class
