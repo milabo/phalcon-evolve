@@ -23,7 +23,7 @@ class CsvDataAdapter {
 	const FILTER_DATE = 'date';
 	const FILTER_DATETIME2TS = 'datetime2ts'; // "Y-M-D H:i:s" -> timestamp
 	const FILTER_TS2DATETIME = 'ts2datetime'; // timestamp -> "Y-M-D H:i:s"
-	const FILTER_TAXONOMY_COMMA = 'taxonomy_comma';
+	const FILTER_SEPARATED_COMMA = 'separated_comma';
 
 	/**
 	 * @param $class
@@ -193,7 +193,7 @@ class CsvDataAdapter {
 					return $this->anyToTimestamp($value);
 				case self::FILTER_TS2DATETIME:
 					return $this->timestampToDatetime($value, "Y-m-d H:i:s");
-				case self::FILTER_TAXONOMY_COMMA:
+				case self::FILTER_SEPARATED_COMMA:
 					return Sx::x($value)->split(',', true);
 				default:
 					return call_user_func($filter, $value);
